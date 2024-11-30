@@ -1,0 +1,50 @@
+{
+  "name": "income-tracker-frontend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "dev": "vite --port=4001",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite"
+  },
+  "devDependencies": {
+    "@tanstack/eslint-plugin-query": "^5.61.6",
+    "@tanstack/router-devtools": "^1.85.0",
+    "@tanstack/router-plugin": "^1.84.4",
+    "@types/node": "^22.10.1",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.2",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "postcss-preset-mantine": "^1.17.0",
+    "postcss-simple-vars": "^7.0.1",
+    "tailwindcss": "^3.4.15",
+    "vite": "^5.4.8"
+  },
+  "dependencies": {
+    "@mantine/charts": "^7.14.3",
+    "@mantine/core": "^7.14.3",
+    "@mantine/dates": "^7.14.3",
+    "@mantine/form": "^7.14.3",
+    "@mantine/hooks": "^7.14.3",
+    "@mantine/modals": "^7.14.3",
+    "@mantine/nprogress": "^7.14.3",
+    "@pipisasa/storage": "npm:@jsr/pipisasa__storage@^1.0.2",
+    "@tanstack/react-query": "^5.62.0",
+    "@tanstack/react-router": "^1.85.0",
+    "axios": "^1.7.8",
+    "dayjs": "^1.11.13",
+    "path": "^0.12.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-toastify": "^10.0.6",
+    "recharts": "2",
+    "redux-persist": "^6.0.0",
+    "superjson": "^2.2.1",
+    "vite-plugin-pwa": "^0.21.1"
+  }
+}
