@@ -94,7 +94,7 @@ const ResetPasswordFormWithPhoneForm = ({ onSubmit, loading }: Props) => {
                 <Button
                     type="button"
                     mt="lg"
-                    color="#722CCC"
+                    color="#62B440"
                     size="sm"
                     radius={10}
                     fullWidth
@@ -108,7 +108,7 @@ const ResetPasswordFormWithPhoneForm = ({ onSubmit, loading }: Props) => {
                 <Button
                     type="button"
                     mt="lg"
-                    color="#722CCC"
+                    color="#62B440"
                     size="sm"
                     radius={10}
                     fullWidth
@@ -154,7 +154,7 @@ const ResetPasswordFormWithPhoneForm = ({ onSubmit, loading }: Props) => {
                     size="sm"
                     radius={10}
                     fullWidth
-                    color="#722CCC"
+                    color="#62B440"
                     disabled={loading}
                 >
                     Сбросить пароль

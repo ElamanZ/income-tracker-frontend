@@ -13,8 +13,6 @@ function AppLayout() {
     }
   }, [me])
 
-
-
   return (
     <Layout>
       <Outlet />
@@ -25,7 +23,6 @@ function AppLayout() {
 
 export const Route = createFileRoute('/_app')({
   component: AppLayout,
-
 
   beforeLoad: async ({ location, context }) => {
     const isAuth = !!context.me
@@ -41,5 +38,6 @@ export const Route = createFileRoute('/_app')({
         },
       })
     }
+
   },
 })

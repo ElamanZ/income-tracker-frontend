@@ -22,7 +22,7 @@ function Login() {
           <Link to="/signup">
             <Button
               size="xs"
-              color="#722CCC"
+              color="#62B440"
               variant="outline"
               fullWidth
               radius={10}
@@ -33,7 +33,7 @@ function Login() {
           <Link >
             <Button
               size="xs"
-              color="#722CCC"
+              color="#62B440"
               variant="outline"
               fullWidth
               radius={10}

@@ -38,8 +38,8 @@ export const useLogin = () => {
     mutationFn: login,
     onSuccess(me) {
       queryClient.setQueryData<Me>(['me'], me);
+      navigate({ to: '/balance' })
       toast.success('Вы успешно вошли в аккаунт');
-      navigate({ to: '/home' })
     },
     onError(error) {
       if (isAxiosError(error) && error.response?.status === 400) {

@@ -132,7 +132,7 @@ const SignUpFormWithPhoneForm = ({ onSubmit, loading }: Props) => {
         <Button
           type="button"
           mt="lg"
-          color="#722CCC"
+          color="#62B440"
           size="sm"
           radius={10}
           fullWidth
@@ -147,7 +147,7 @@ const SignUpFormWithPhoneForm = ({ onSubmit, loading }: Props) => {
           mt="lg"
           size="sm"
           radius={10}
-          color="#722CCC"
+          color="#62B440"
           fullWidth
           disabled={loading}
         >

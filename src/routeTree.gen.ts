@@ -12,15 +12,23 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as AppImport } from './routes/_app'
+import { Route as IndexImport } from './routes/index'
 import { Route as AuthSignupImport } from './routes/_auth/signup'
 import { Route as AuthSigninImport } from './routes/_auth/signin'
+import { Route as AppTransactionsIndexImport } from './routes/_app/transactions/index'
 import { Route as AppSettingsIndexImport } from './routes/_app/settings/index'
-import { Route as AppHomeIndexImport } from './routes/_app/home/index'
+import { Route as AppBalanceIndexImport } from './routes/_app/balance/index'
 
 // Create/Update Routes
 
 const AppRoute = AppImport.update({
   id: '/_app',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const IndexRoute = IndexImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -36,15 +44,21 @@ const AuthSigninRoute = AuthSigninImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AppTransactionsIndexRoute = AppTransactionsIndexImport.update({
+  id: '/transactions/',
+  path: '/transactions/',
+  getParentRoute: () => AppRoute,
+} as any)
+
 const AppSettingsIndexRoute = AppSettingsIndexImport.update({
   id: '/settings/',
   path: '/settings/',
   getParentRoute: () => AppRoute,
 } as any)
 
-const AppHomeIndexRoute = AppHomeIndexImport.update({
-  id: '/home/',
-  path: '/home/',
+const AppBalanceIndexRoute = AppBalanceIndexImport.update({
+  id: '/balance/',
+  path: '/balance/',
   getParentRoute: () => AppRoute,
 } as any)
 
@@ -52,6 +66,13 @@ const AppHomeIndexRoute = AppHomeIndexImport.update({
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
     '/_app': {
       id: '/_app'
       path: ''
@@ -73,11 +94,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignupImport
       parentRoute: typeof rootRoute
     }
-    '/_app/home/': {
-      id: '/_app/home/'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof AppHomeIndexImport
+    '/_app/balance/': {
+      id: '/_app/balance/'
+      path: '/balance'
+      fullPath: '/balance'
+      preLoaderRoute: typeof AppBalanceIndexImport
       parentRoute: typeof AppImport
     }
     '/_app/settings/': {
@@ -87,70 +108,103 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsIndexImport
       parentRoute: typeof AppImport
     }
+    '/_app/transactions/': {
+      id: '/_app/transactions/'
+      path: '/transactions'
+      fullPath: '/transactions'
+      preLoaderRoute: typeof AppTransactionsIndexImport
+      parentRoute: typeof AppImport
+    }
   }
 }
 
 // Create and export the route tree
 
 interface AppRouteChildren {
-  AppHomeIndexRoute: typeof AppHomeIndexRoute
+  AppBalanceIndexRoute: typeof AppBalanceIndexRoute
   AppSettingsIndexRoute: typeof AppSettingsIndexRoute
+  AppTransactionsIndexRoute: typeof AppTransactionsIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
-  AppHomeIndexRoute: AppHomeIndexRoute,
+  AppBalanceIndexRoute: AppBalanceIndexRoute,
   AppSettingsIndexRoute: AppSettingsIndexRoute,
+  AppTransactionsIndexRoute: AppTransactionsIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
   '': typeof AppRouteWithChildren
   '/signin': typeof AuthSigninRoute
   '/signup': typeof AuthSignupRoute
-  '/home': typeof AppHomeIndexRoute
+  '/balance': typeof AppBalanceIndexRoute
   '/settings': typeof AppSettingsIndexRoute
+  '/transactions': typeof AppTransactionsIndexRoute
 }
 
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '': typeof AppRouteWithChildren
   '/signin': typeof AuthSigninRoute
   '/signup': typeof AuthSignupRoute
-  '/home': typeof AppHomeIndexRoute
+  '/balance': typeof AppBalanceIndexRoute
   '/settings': typeof AppSettingsIndexRoute
+  '/transactions': typeof AppTransactionsIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
+  '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/_auth/signin': typeof AuthSigninRoute
   '/_auth/signup': typeof AuthSignupRoute
-  '/_app/home/': typeof AppHomeIndexRoute
+  '/_app/balance/': typeof AppBalanceIndexRoute
   '/_app/settings/': typeof AppSettingsIndexRoute
+  '/_app/transactions/': typeof AppTransactionsIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/signin' | '/signup' | '/home' | '/settings'
+  fullPaths:
+    | '/'
+    | ''
+    | '/signin'
+    | '/signup'
+    | '/balance'
+    | '/settings'
+    | '/transactions'
   fileRoutesByTo: FileRoutesByTo
-  to: '' | '/signin' | '/signup' | '/home' | '/settings'
+  to:
+    | '/'
+    | ''
+    | '/signin'
+    | '/signup'
+    | '/balance'
+    | '/settings'
+    | '/transactions'
   id:
     | '__root__'
+    | '/'
     | '/_app'
     | '/_auth/signin'
     | '/_auth/signup'
-    | '/_app/home/'
+    | '/_app/balance/'
     | '/_app/settings/'
+    | '/_app/transactions/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   AuthSigninRoute: typeof AuthSigninRoute
   AuthSignupRoute: typeof AuthSignupRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   AuthSigninRoute: AuthSigninRoute,
   AuthSignupRoute: AuthSignupRoute,
@@ -166,16 +220,21 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
+        "/",
         "/_app",
         "/_auth/signin",
         "/_auth/signup"
       ]
     },
+    "/": {
+      "filePath": "index.tsx"
+    },
     "/_app": {
       "filePath": "_app.tsx",
       "children": [
-        "/_app/home/",
-        "/_app/settings/"
+        "/_app/balance/",
+        "/_app/settings/",
+        "/_app/transactions/"
       ]
     },
     "/_auth/signin": {
@@ -184,12 +243,16 @@ export const routeTree = rootRoute
     "/_auth/signup": {
       "filePath": "_auth/signup.tsx"
     },
-    "/_app/home/": {
-      "filePath": "_app/home/index.tsx",
+    "/_app/balance/": {
+      "filePath": "_app/balance/index.tsx",
       "parent": "/_app"
     },
     "/_app/settings/": {
       "filePath": "_app/settings/index.tsx",
+      "parent": "/_app"
+    },
+    "/_app/transactions/": {
+      "filePath": "_app/transactions/index.tsx",
       "parent": "/_app"
     }
   }

@@ -57,7 +57,7 @@ const LoginForm = ({ onSubmit, loading }: Props) => {
       />
       <Button
         type="submit"
-        color="#722CCC"
+        color="#62B440"
         mt="lg"
         size="sm"
         radius={10}

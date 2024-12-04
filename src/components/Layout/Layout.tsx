@@ -1,31 +1,25 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { AppShell, Burger } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
-import { cn } from "~/utils/cn";
+import SideBar from "./SideBar/SideBar";
+import { Link } from "@tanstack/react-router";
+import LogoWithText2 from "../Logo/LogoWithText2";
 
 type Props = {
   children: ReactNode;
 };
 
 const Layout = ({ children }: Props) => {
-  const [expanded, setExpanded] = useState(false);
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure(false);
+  const isMobile = useMediaQuery("(max-width: 900px)");
 
-  const isMobile = useMediaQuery("(max-width: 1320px)");
-
-
-  useEffect(() => {
-    if (isMobile && !expanded) {
-      setExpanded(true);
-    }
-  }, [setExpanded, isMobile, expanded]);
 
   return (
     <AppShell
       header={{ height: isMobile ? 60 : 0 }}
       navbar={{
-        width: expanded ? (!isMobile ? 210 : "100%") : 73,
-        breakpoint: 1180,
+        width: !isMobile ? 250 : 0,
+        breakpoint: 900,
         collapsed: { mobile: !mobileOpened },
       }}
     >
@@ -38,16 +32,23 @@ const Layout = ({ children }: Props) => {
               size="sm"
               className="w-[4%]"
             />
+
+            <div className="ml-4">
+              <Link to="/balance">
+                <LogoWithText2 size={150} />
+              </Link>
+            </div>
+
           </div>
         </AppShell.Header>
       )}
 
-      <AppShell.Navbar className={cn("h-full")}>
-        asdsad
+      <AppShell.Navbar className="h-full ">
+        <SideBar />
       </AppShell.Navbar>
 
       <AppShell.Main>
-        <main className={`px-4 transition-all duration-300 min-h-screen`}>
+        <main className={`px-4`}>
           {children}
         </main>
       </AppShell.Main>
