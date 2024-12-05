@@ -1,58 +1,65 @@
-import { type ReactNode } from "react";
-import { AppShell, Burger } from "@mantine/core";
+import { useEffect, type ReactNode } from "react";
+import { AppShell, Burger, Group } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import SideBar from "./SideBar/SideBar";
-import { Link } from "@tanstack/react-router";
 import LogoWithText2 from "../Logo/LogoWithText2";
+import { cn } from "~/utils/cn";
 
 type Props = {
   children: ReactNode;
 };
 
 const Layout = ({ children }: Props) => {
-  const [mobileOpened, { toggle: toggleMobile }] = useDisclosure(false);
-  const isMobile = useMediaQuery("(max-width: 900px)");
 
+  const [opened, { toggle, close }] = useDisclosure();
+  const isMobile = useMediaQuery("(max-width: 767px)");
+
+  useEffect(() => {
+    if (!isMobile) {
+      close();
+    }
+  }, [isMobile, close]);
+
+  console.log(opened, 'opened');
 
   return (
+
     <AppShell
-      header={{ height: isMobile ? 60 : 0 }}
-      navbar={{
-        width: !isMobile ? 250 : 0,
-        breakpoint: 900,
-        collapsed: { mobile: !mobileOpened },
-      }}
+      header={{ height: 60 }}
+      navbar={{ width: 250, breakpoint: 768, collapsed: { mobile: !opened } }}
+      padding="md"
     >
-      {isMobile && (
-        <AppShell.Header>
-          <div className="flex items-center h-full px-4">
-            <Burger
-              opened={mobileOpened}
-              onClick={toggleMobile}
-              size="sm"
-              className="w-[4%]"
-            />
+      <AppShell.Header>
+        <Group h="100%" px="md">
+          <Burger opened={opened} onClick={toggle} hiddenFrom='sm' size="sm" />
 
-            <div className="ml-4">
-              <Link to="/balance">
-                <LogoWithText2 size={150} />
-              </Link>
-            </div>
+          {isMobile && opened && (
+            <LogoWithText2 size={150} />
+          )}
 
+
+          <div
+            id="header"
+            className={cn('flex items-center gap-2',
+              { 'hidden': opened, ' visible': !opened }
+            )}>
           </div>
-        </AppShell.Header>
-      )}
+
+
+
+        </Group>
+      </AppShell.Header>
 
       <AppShell.Navbar className="h-full ">
-        <SideBar />
+        <SideBar close={close} />
       </AppShell.Navbar>
 
       <AppShell.Main>
-        <main className={`px-4`}>
+        <main>
           {children}
         </main>
       </AppShell.Main>
-    </AppShell>
+    </AppShell >
   );
 };
 

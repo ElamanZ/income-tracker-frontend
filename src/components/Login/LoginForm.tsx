@@ -1,4 +1,4 @@
-import { Button, PasswordInput } from "@mantine/core";
+import { Button, PasswordInput, Text } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 // import { PhoneInput } from 'components/PhoneInput/PhoneInput';
 import { z } from "zod";
@@ -34,7 +34,7 @@ const LoginForm = ({ onSubmit, loading }: Props) => {
 
   return (
     <form onSubmit={form.onSubmit(onSubmit)}>
-      <h1 className="font-bold text-center">Войти в личный кабинет</h1>
+      <Text size="lg" className="font-bold text-center">Войти</Text>
 
       <PhoneInput
         id="phone"

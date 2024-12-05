@@ -18,7 +18,7 @@ export type LoginArg = z.infer<typeof loginSchema>;
 
 export const login = async (arg: LoginArg): Promise<Me> => {
   const parsedArg = loginSchema.parse(arg);
-  const { data: tokens } = await baseAxiosAnon.post<Tokens>('/auth/login', parsedArg);
+  const { data: tokens } = await baseAxiosAnon.post<Tokens>('/auth/sign-in', parsedArg);
   const { data: profile } = await baseAxiosAnon.get<ProfileEntity>(`/auth/me`, {
     headers: {
       'Authorization': `Bearer ${tokens.accessToken}`

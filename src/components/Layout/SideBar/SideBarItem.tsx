@@ -6,12 +6,14 @@ import { Text } from "@mantine/core"
 
 type Props = {
     navBarItem: NavbarItem
+    close: () => void
 }
 
 
-const SideBarItem = ({ navBarItem }: Props) => {
+const SideBarItem = ({ navBarItem, close }: Props) => {
     return (
         <Link
+            onClick={close}
             activeProps={{
                 className: 'relative flex items-center rounded-md p-2 text-xl cursor-pointer bg-[#E2EED8] text-[#62B440]'
             }}

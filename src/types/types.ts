@@ -8,5 +8,6 @@ export type ProfileEntity = {
   createdAt: string;
   firstName?: string | null;
   lastName?: string | null;
+  balance: number;
 };
 

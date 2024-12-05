@@ -4,6 +4,7 @@ import App from './App';
 import dayjs from 'dayjs';
 import "dayjs/locale/ru";
 import './index.css'
+import '@mantine/charts/styles.css';
 
 dayjs.locale("ru");
 
