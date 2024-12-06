@@ -1,4 +1,4 @@
-import { IconCashRegister, IconDeviceTabletDollar, IconSettings } from '@tabler/icons-react';
+import { IconCashRegister, IconCategory, IconDeviceTabletDollar, IconSettings } from '@tabler/icons-react';
 import { FileRoutesByPath } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
 
@@ -24,6 +24,12 @@ export const navbarItems: NavbarItem[] = [
         path: '/transactions',
         title: 'Транзакции',
         icon: <IconDeviceTabletDollar />
+    },
+    {
+        id: 'categories',
+        path: '/categories',
+        title: 'Категории',
+        icon: <IconCategory />
     },
     {
         id: 'settings',

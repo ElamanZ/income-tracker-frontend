@@ -11,3 +11,18 @@ export type ProfileEntity = {
   balance: number;
 };
 
+export type Category = {
+  id: string;
+  name: string;
+  color: string;
+  isIncome: boolean;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+}
+
+export type GroupedCategories = {
+  income: Category[];
+  expense: Category[];
+};
+

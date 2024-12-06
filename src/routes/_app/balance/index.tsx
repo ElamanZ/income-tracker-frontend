@@ -1,7 +1,7 @@
 import { Button, Text } from '@mantine/core'
 import { createFileRoute, useSearch } from '@tanstack/react-router'
 import BalanceHeader from '~/components/Balance/BalanceHeader'
-import { balancePageFiltersSchema } from '~/schemes/balance.search'
+import { balancePageFiltersSchema } from '~/schemes/pageSearch/balance.search'
 import { PieChart } from '@mantine/charts';
 import dayjs from 'dayjs';
 import { useGetMe } from '~/services/getMe';
@@ -45,7 +45,6 @@ function BalancePage() {
             withTooltip
             mx="auto"
             tooltipDataSource="segment"
-            labelColor="violet"
             labelsPosition="inside"
             labelsType="value"
             withLabels
@@ -53,17 +52,6 @@ function BalancePage() {
             size={290}
             data={data} />
         </div>
-
-        {/* <div>
-          <ColorPicker
-            format="hex"
-            onChange={(color) => {
-              console.log(color)
-            }}
-            swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
-          />
-
-        </div> */}
 
         <div className='flex gap-2'>
           <Button

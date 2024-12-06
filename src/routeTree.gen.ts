@@ -17,6 +17,7 @@ import { Route as AuthSignupImport } from './routes/_auth/signup'
 import { Route as AuthSigninImport } from './routes/_auth/signin'
 import { Route as AppTransactionsIndexImport } from './routes/_app/transactions/index'
 import { Route as AppSettingsIndexImport } from './routes/_app/settings/index'
+import { Route as AppCategoriesIndexImport } from './routes/_app/categories/index'
 import { Route as AppBalanceIndexImport } from './routes/_app/balance/index'
 
 // Create/Update Routes
@@ -53,6 +54,12 @@ const AppTransactionsIndexRoute = AppTransactionsIndexImport.update({
 const AppSettingsIndexRoute = AppSettingsIndexImport.update({
   id: '/settings/',
   path: '/settings/',
+  getParentRoute: () => AppRoute,
+} as any)
+
+const AppCategoriesIndexRoute = AppCategoriesIndexImport.update({
+  id: '/categories/',
+  path: '/categories/',
   getParentRoute: () => AppRoute,
 } as any)
 
@@ -101,6 +108,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppBalanceIndexImport
       parentRoute: typeof AppImport
     }
+    '/_app/categories/': {
+      id: '/_app/categories/'
+      path: '/categories'
+      fullPath: '/categories'
+      preLoaderRoute: typeof AppCategoriesIndexImport
+      parentRoute: typeof AppImport
+    }
     '/_app/settings/': {
       id: '/_app/settings/'
       path: '/settings'
@@ -122,12 +136,14 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppBalanceIndexRoute: typeof AppBalanceIndexRoute
+  AppCategoriesIndexRoute: typeof AppCategoriesIndexRoute
   AppSettingsIndexRoute: typeof AppSettingsIndexRoute
   AppTransactionsIndexRoute: typeof AppTransactionsIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppBalanceIndexRoute: AppBalanceIndexRoute,
+  AppCategoriesIndexRoute: AppCategoriesIndexRoute,
   AppSettingsIndexRoute: AppSettingsIndexRoute,
   AppTransactionsIndexRoute: AppTransactionsIndexRoute,
 }
@@ -140,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/signin': typeof AuthSigninRoute
   '/signup': typeof AuthSignupRoute
   '/balance': typeof AppBalanceIndexRoute
+  '/categories': typeof AppCategoriesIndexRoute
   '/settings': typeof AppSettingsIndexRoute
   '/transactions': typeof AppTransactionsIndexRoute
 }
@@ -150,6 +167,7 @@ export interface FileRoutesByTo {
   '/signin': typeof AuthSigninRoute
   '/signup': typeof AuthSignupRoute
   '/balance': typeof AppBalanceIndexRoute
+  '/categories': typeof AppCategoriesIndexRoute
   '/settings': typeof AppSettingsIndexRoute
   '/transactions': typeof AppTransactionsIndexRoute
 }
@@ -161,6 +179,7 @@ export interface FileRoutesById {
   '/_auth/signin': typeof AuthSigninRoute
   '/_auth/signup': typeof AuthSignupRoute
   '/_app/balance/': typeof AppBalanceIndexRoute
+  '/_app/categories/': typeof AppCategoriesIndexRoute
   '/_app/settings/': typeof AppSettingsIndexRoute
   '/_app/transactions/': typeof AppTransactionsIndexRoute
 }
@@ -173,6 +192,7 @@ export interface FileRouteTypes {
     | '/signin'
     | '/signup'
     | '/balance'
+    | '/categories'
     | '/settings'
     | '/transactions'
   fileRoutesByTo: FileRoutesByTo
@@ -182,6 +202,7 @@ export interface FileRouteTypes {
     | '/signin'
     | '/signup'
     | '/balance'
+    | '/categories'
     | '/settings'
     | '/transactions'
   id:
@@ -191,6 +212,7 @@ export interface FileRouteTypes {
     | '/_auth/signin'
     | '/_auth/signup'
     | '/_app/balance/'
+    | '/_app/categories/'
     | '/_app/settings/'
     | '/_app/transactions/'
   fileRoutesById: FileRoutesById
@@ -233,6 +255,7 @@ export const routeTree = rootRoute
       "filePath": "_app.tsx",
       "children": [
         "/_app/balance/",
+        "/_app/categories/",
         "/_app/settings/",
         "/_app/transactions/"
       ]
@@ -245,6 +268,10 @@ export const routeTree = rootRoute
     },
     "/_app/balance/": {
       "filePath": "_app/balance/index.tsx",
+      "parent": "/_app"
+    },
+    "/_app/categories/": {
+      "filePath": "_app/categories/index.tsx",
       "parent": "/_app"
     },
     "/_app/settings/": {

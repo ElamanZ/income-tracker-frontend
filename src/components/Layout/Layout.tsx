@@ -20,7 +20,6 @@ const Layout = ({ children }: Props) => {
     }
   }, [isMobile, close]);
 
-  console.log(opened, 'opened');
 
   return (
 

@@ -4,7 +4,7 @@ import { Select } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { DatePickerInput, DateValue } from '@mantine/dates';
 import { IconCalendar } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import dayjs from 'dayjs';
 
@@ -16,11 +16,40 @@ const BalanceHeader = () => {
 
     const portal = document.getElementById('header')
     const isMobile = useMediaQuery("(max-width: 767px)");
+
+
     const [dates, setDates] = useState<[DateValue, DateValue]>([
         search.fromDate ?? dayjs().startOf("month").toDate(),
         search.toDate ?? dayjs().endOf("month").toDate(),
     ]);
     const today = dayjs().minute(0).second(0).millisecond(0);
+
+
+    useEffect(() => {
+        const startOfMonth = dayjs().startOf("month").toDate();
+        const endOfMonth = dayjs().endOf("month").toDate();
+
+        navigate({
+            to: "/balance",
+            search: (prev) => ({
+                ...prev,
+                fromDate: startOfMonth,
+                toDate: endOfMonth,
+            }),
+        });
+    }, [navigate]);
+
+    useEffect(() => {
+        navigate({
+            to: "/balance",
+            search: (prev) => ({
+                ...prev,
+                fromDate: dates[0] ?? null,
+                toDate: dates[1] ?? null,
+            }),
+        });
+    }, [dates, navigate]);
+
 
     return (
         <>
@@ -42,7 +71,19 @@ const BalanceHeader = () => {
                         //     label: item.name,
                         // }))}
                         />
+
                         <DatePickerInput
+                            type="range"
+                            leftSection={<IconCalendar size={16} />}
+                            size={isMobile ? 'xs' : 'md'}
+                            radius='md'
+                            value={dates}
+                            valueFormat='DD.MM'
+                            defaultValue={[today.toDate(), today.toDate()]}
+                            onChange={(value) => setDates(value)}
+                        />
+
+                        {/* <DatePickerInput
                             type="range"
                             leftSection={<IconCalendar size={16} />}
                             size={isMobile ? 'xs' : 'md'}
@@ -62,7 +103,7 @@ const BalanceHeader = () => {
                                     });
                                 }
                             }}
-                        />
+                        /> */}
                     </div>,
                     portal
                 )
