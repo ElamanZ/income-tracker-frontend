@@ -26,3 +26,27 @@ export type GroupedCategories = {
   expense: Category[];
 };
 
+export type Transaction = {
+  id: string;
+  comment: string | null;
+  isIncome: boolean;
+  amount: number;
+  date: string;
+  categoryId: string;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+};
+
+export type Debt = {
+  id: string;
+  isMyDebt: boolean;
+  active: boolean;
+  amount: number;
+  name: string;
+  comment: string | null;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+};
+
