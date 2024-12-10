@@ -145,7 +145,7 @@ function CategoriesPage() {
 
             <Modal
                 opened={openedCreateModal}
-                onClose={close}
+                onClose={closeCreateModal}
                 radius='md'
                 title="Новая категория"
                 size="sm"

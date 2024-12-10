@@ -80,6 +80,18 @@ function BalancePage() {
             Расход -
           </Button>
         </div>
+        <Button
+          variant="outline"
+          color="violet"
+          radius="md"
+          fullWidth
+          size="md"
+          onClick={() => {
+            console.log('Расход -')
+          }}
+        >
+          Долг
+        </Button>
 
       </div>
     </>
