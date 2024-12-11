@@ -69,7 +69,6 @@ const CategoryFrom = ({ onSubmit, defaultValues = {} }: Props) => {
                     size={isMobile ? 'sm' : 'md'}
                     label="Название"
                     placeholder="Название категории"
-                    required
                     radius='md'
                     {...form.getInputProps("name")}
                 />

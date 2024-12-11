@@ -25,6 +25,7 @@ export const data = [
 function BalancePage() {
 
   const [openedCreateIncomeModal, { open: openCreateIncomeModal, close: closeCreateIncomeModal }] = useDisclosure(false);
+  const [openedCreateExpenseModal, { open: openCreateExpenseModal, close: closeCreateExpenseModal }] = useDisclosure(false);
 
   const navigate = useNavigate({ from: "/balance" });
   const search = useSearch({ from: "/_app/balance/" });
@@ -36,9 +37,10 @@ function BalancePage() {
   const isMobile = useMediaQuery("(max-width: 767px)");
   const [createTransaction] = useCreateTransaction();
 
-  const handleCreateIncomeSubmit = (values: CreateTransactionArg) => {
+  const handleCreateTransactionSubmit = (values: CreateTransactionArg) => {
     createTransaction(values);
     closeCreateIncomeModal();
+    closeCreateExpenseModal();
   }
 
 
@@ -144,9 +146,7 @@ function BalancePage() {
             radius="md"
             fullWidth
             size="md"
-            onClick={() => {
-              console.log('Расход -')
-            }}
+            onClick={openCreateExpenseModal}
           >
             Расход -
           </Button>
@@ -169,10 +169,20 @@ function BalancePage() {
         opened={openedCreateIncomeModal}
         onClose={closeCreateIncomeModal}
         radius='md'
-        title="Новая категория"
+        title="Новая транзакция"
         size="sm"
       >
-        <CreateTransactionForm isIncome={true} onSubmit={handleCreateIncomeSubmit} />
+        <CreateTransactionForm isIncome={true} onSubmit={handleCreateTransactionSubmit} />
+      </Modal>
+
+      <Modal
+        opened={openedCreateExpenseModal}
+        onClose={closeCreateExpenseModal}
+        radius='md'
+        title="Новая транзакция"
+        size="sm"
+      >
+        <CreateTransactionForm isIncome={false} onSubmit={handleCreateTransactionSubmit} />
       </Modal>
 
     </>

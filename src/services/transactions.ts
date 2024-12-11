@@ -62,6 +62,7 @@ export const useCreateTransaction = () => {
         mutationFn: createTransaction,
         onSuccess: () => {
             void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'transaction' });
+            void queryClient.invalidateQueries({ queryKey: ['me'] });
             toast.success('Транзакция успешно создана');
         }
     });
@@ -90,6 +91,7 @@ export const useUpdateTransaction = () => {
         mutationFn: updateTransaction,
         onSuccess: (data) => {
             void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'transaction' });
+            void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'me' });
             queryClient.setQueryData(['transaction', data.id], data)
             toast.success('Транзакция успешно обновлена');
         }
@@ -103,6 +105,7 @@ export const useDeleteTransaction = () => {
         mutationFn: deleteTransaction,
         onSuccess: () => {
             void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'transaction' });
+            void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'me' });
             toast.success('Транзакция успешно удалена');
         }
     });

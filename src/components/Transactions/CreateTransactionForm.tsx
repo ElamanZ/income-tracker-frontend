@@ -1,8 +1,14 @@
-import { ColorPicker, Text, TextInput } from "@mantine/core"
+import { NumberInput, SegmentedControl, Select, Text, TextInput } from "@mantine/core"
 import { useForm, zodResolver } from "@mantine/form";
 import { useMediaQuery } from "@mantine/hooks";
 import CustomCreateBtn from "../Buttons/CustomCreateBtn";
 import { CreateTransactionArg, createTransactionSchema } from "~/services/transactions";
+import { DatePickerInput, DateValue } from "@mantine/dates";
+import { IconCalendar } from "@tabler/icons-react";
+import { useState } from "react";
+import dayjs from "dayjs";
+import { useFetchGroupedCategories } from "~/services/category";
+import { categoryTypeSelectItems } from "../Categories/CategoryFrom";
 
 
 type Props = {
@@ -15,12 +21,18 @@ type Props = {
 const CreateTransactionForm = ({ onSubmit, isIncome, defaultValues = {} }: Props) => {
 
   const isMobile = useMediaQuery("(max-width: 767px)");
+  const today = dayjs()
+
+  const [dates, setDate] = useState<DateValue>(dayjs().toDate());
+
+  const [groupedCategories] = useFetchGroupedCategories();
+
 
   const form = useForm<CreateTransactionArg>({
     initialValues: {
       isIncome: isIncome,
-      amount: 0,
       date: new Date(),
+      amount: 0,
       categoryId: '',
       comment: '',
       ...defaultValues,
@@ -35,32 +47,73 @@ const CreateTransactionForm = ({ onSubmit, isIncome, defaultValues = {} }: Props
     <form onSubmit={form.onSubmit(onSubmit)}>
       <div className="space-y-4">
 
+        <SegmentedControl
+          color={form.values.isIncome ? "#30D8B1" : "#EC4887"}
+          fullWidth
+          radius={10}
+          size="md"
+          data={categoryTypeSelectItems}
+          value={String(form.values.isIncome)}
+          onChange={(val) => {
+            form.setFieldValue("isIncome", val === "true");
+          }}
+          disabled
+        />
+
+        <DatePickerInput
+          label="Дата"
+          leftSection={<IconCalendar size={16} />}
+          size={isMobile ? 'sm' : 'md'}
+          radius='md'
+          value={dates}
+          defaultValue={today.toDate()}
+          onChange={val => {
+            form.setFieldValue('date', val as Date)
+            setDate(val)
+          }}
+        />
+
         <div>
           <Text className="font-semibold text-sm mb-1">Выберите тип категории</Text>
-
+          <Select
+            size={isMobile ? 'sm' : 'md'}
+            radius='md'
+            placeholder="Категории"
+            data={isIncome ? groupedCategories.income.map((item) => ({
+              value: item.id,
+              label: item.name,
+            })) : groupedCategories.expense.map((item) => ({
+              value: item.id,
+              label: item.name,
+            }))}
+            {...form.getInputProps('categoryId')}
+            clearable
+          />
         </div>
+
+        <NumberInput
+          size={isMobile ? 'sm' : 'md'}
+          onInput={(e) => {
+            const input = e.currentTarget;
+            input.value = input.value.replace(/^0+/, '');
+          }}
+          radius='md'
+          label="Сумма"
+          hideControls
+          min={1}
+          {...form.getInputProps("amount")}
+        />
+
+
 
         <TextInput
           mt="sm"
           size={isMobile ? 'sm' : 'md'}
-          label="Название"
-          placeholder="Название категории"
-          required
+          label="Комментарий"
+          placeholder="Коммнетарий"
           radius='md'
-          {...form.getInputProps("name")}
+          {...form.getInputProps("comment")}
         />
-
-        <div>
-          <Text size={isMobile ? 'sm' : 'md'} mt="sm">Цвет категории</Text>
-          <ColorPicker
-            size={isMobile ? 'sm' : 'md'}
-            fullWidth
-            format="hex"
-            swatchesPerRow={8}
-            swatches={['#D830B4', '#AB30D8', '#7630D8', '#3033D8', '#30A3D8', '#1BE4A7', '#30D8BF', '#D83030', '#D86030', '#D8CA30', '#1CCE46', '#727272', '#1E1055', '#025757', '#650', '#552210']}
-            {...form.getInputProps("color")}
-          />
-        </div>
 
         <CustomCreateBtn
           title={defaultValues?.amount ? 'Изменить' : 'Создать'}

@@ -7,7 +7,7 @@ import { baseAxios, baseAxiosAnon } from '../utils/baseAxios';
 
 
 export const fetchUser = async () => {
-    const { data } = await baseAxios.get<ProfileEntity>(`/profile/me`);
+    const { data } = await baseAxios.get<ProfileEntity>(`/auth/me`);
     return data;
 }
 
@@ -24,7 +24,7 @@ export const refreshMe = async (): Promise<Me> => {
             'Authorization': `Bearer ${me?.tokens.refreshToken}`,
         }
     });
-    const { data: profile } = await baseAxiosAnon.get<ProfileEntity>(`/profile/me`, {
+    const { data: profile } = await baseAxiosAnon.get<ProfileEntity>(`/auth/me`, {
         headers: {
             'Authorization': `Bearer ${tokens.accessToken}`,
         }
