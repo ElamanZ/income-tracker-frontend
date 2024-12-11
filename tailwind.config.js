@@ -6,6 +6,13 @@ export default {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'custom-gradient': 'radial-gradient(49.8% 23.01% at 50% 50%, #2A284F 0%, #0F0F31 100%)',
+      },
+      backgroundColor: {
+        'custom-bg-dark': '#130919',
+        'custom-bg-gradient': 'linear-gradient(90deg, #DF4BFF 0%, #799AFF 50%, #65D5FE 100%)'
+      },
       boxShadow: {
         'custom-inset': '0px 0px 4px 0px #0000000D inset',
       },

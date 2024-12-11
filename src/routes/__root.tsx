@@ -2,7 +2,6 @@ import { createRootRouteWithContext, Outlet } from '@tanstack/react-router';
 // import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { Me } from '../services/getMe';
 import { lazy, Suspense } from 'react';
-import { ModalsProvider } from '@mantine/modals';
 
 interface MyRouterContext {
   // The ReturnType of your useAuth hook or the value of your AuthContext
@@ -23,11 +22,11 @@ const TanStackRouterDevtools =
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => (
-    <ModalsProvider >
+    <>
       <Outlet />
       <Suspense fallback={null}>
         <TanStackRouterDevtools position="bottom-right" initialIsOpen={false} />
       </Suspense>
-    </ModalsProvider>
+    </>
   ),
 })

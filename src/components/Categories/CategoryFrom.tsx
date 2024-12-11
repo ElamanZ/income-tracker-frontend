@@ -1,13 +1,32 @@
-import { Button, ColorPicker, Group, Radio, Text, TextInput } from "@mantine/core"
+import { ColorPicker, SegmentedControl, SegmentedControlItem, Text, TextInput } from "@mantine/core"
 import { useForm, zodResolver } from "@mantine/form";
 import { useMediaQuery } from "@mantine/hooks";
 import { CreateCategoryArg, createCategorySchema } from "~/services/category";
+import CustomCreateBtn from "../Buttons/CustomCreateBtn";
 
 
 type Props = {
     defaultValues?: Partial<CreateCategoryArg> | null;
     onSubmit(values: CreateCategoryArg): void;
 };
+
+export const CategoryType = {
+    isIncome: true,
+    isNotIncome: false,
+} as const;
+
+export type CategoryType = (typeof CategoryType)[keyof typeof CategoryType];
+
+export const categoryTypeSelectItems: SegmentedControlItem[] = [
+    {
+        value: "true",
+        label: "Доход",
+    },
+    {
+        value: "false",
+        label: "Расход",
+    },
+];
 
 const CategoryFrom = ({ onSubmit, defaultValues = {} }: Props) => {
 
@@ -23,42 +42,27 @@ const CategoryFrom = ({ onSubmit, defaultValues = {} }: Props) => {
         validate: zodResolver(createCategorySchema),
     });
 
-    const { setFieldValue } = form;
-
     console.log(form.values, 'values');
     console.log(form.errors, 'errors');
 
     return (
         <form onSubmit={form.onSubmit(onSubmit)}>
             <div className="space-y-4">
-                <Radio.Group
-                    name="categoryType"
-                    label="Выберите тип категории"
-                    withAsterisk
-                    value={form.values.isIncome ? "isIncome" : "isNotIncome"}
-                    onChange={(value) =>
-                        setFieldValue('isIncome', value === "isIncome")
-                    }
-                >
-                    <Group mt="xs">
-                        <Radio
-                            size={isMobile ? 'sm' : 'md'}
-                            className="text-[#62B440]"
-                            variant="outline"
-                            color="green"
-                            value='isIncome'
-                            label="Категория для дохода"
-                        />
-                        <Radio
-                            size={isMobile ? 'sm' : 'md'}
-                            className="text-red-500"
-                            variant="outline"
-                            color="red"
-                            value='isNotIncome'
-                            label="Категория для расхода"
-                        />
-                    </Group>
-                </Radio.Group>
+
+                <div>
+                    <Text className="font-semibold text-sm mb-1">Выберите тип категории</Text>
+                    <SegmentedControl
+                        color={form.values.isIncome ? "#30D8B1" : "#EC4887"}
+                        fullWidth
+                        radius={10}
+                        size="md"
+                        data={categoryTypeSelectItems}
+                        value={String(form.values.isIncome)}
+                        onChange={(val) => {
+                            form.setFieldValue("isIncome", val === "true");
+                        }}
+                    />
+                </div>
 
                 <TextInput
                     mt="sm"
@@ -76,20 +80,16 @@ const CategoryFrom = ({ onSubmit, defaultValues = {} }: Props) => {
                         size={isMobile ? 'sm' : 'md'}
                         fullWidth
                         format="hex"
-                        swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
+                        swatchesPerRow={8}
+                        swatches={['#D830B4', '#AB30D8', '#7630D8', '#3033D8', '#30A3D8', '#1BE4A7', '#30D8BF', '#D83030', '#D86030', '#D8CA30', '#1CCE46', '#727272', '#1E1055', '#025757', '#650', '#552210']}
                         {...form.getInputProps("color")}
                     />
                 </div>
 
-                <Button
+                <CustomCreateBtn
+                    title={defaultValues?.name ? 'Изменить' : 'Создать'}
                     type="submit"
-                    fullWidth
-                    color="#62B440"
-                    radius='md'
-                    size={isMobile ? 'sm' : 'md'}
-                >
-                    {defaultValues?.name ? 'Изменить' : 'Создать'}
-                </Button>
+                />
             </div>
         </form>
     )

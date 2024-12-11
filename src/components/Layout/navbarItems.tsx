@@ -17,25 +17,25 @@ export const navbarItems: NavbarItem[] = [
         id: 'balance',
         path: '/balance',
         title: 'Баланс',
-        icon: <IconCashRegister />
+        icon: <IconCashRegister size={45} />
     },
     {
         id: 'transactions',
         path: '/transactions',
         title: 'Транзакции',
-        icon: <IconDeviceTabletDollar />
+        icon: <IconDeviceTabletDollar size={45} />
     },
     {
         id: 'categories',
         path: '/categories',
         title: 'Категории',
-        icon: <IconCategory />
+        icon: <IconCategory size={45} />
     },
     {
         id: 'settings',
         path: '/settings',
         title: 'Настройки',
-        icon: <IconSettings />
+        icon: <IconSettings size={45} />
     },
 ];
 
