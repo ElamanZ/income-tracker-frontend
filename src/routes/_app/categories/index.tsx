@@ -1,50 +1,48 @@
-import { Button, Modal, Text } from '@mantine/core'
-import { useDisclosure, useMediaQuery } from '@mantine/hooks';
-import { modals } from '@mantine/modals';
+import { Button, Text } from '@mantine/core'
+import { useMediaQuery } from '@mantine/hooks';
+import { modals, openContextModal } from '@mantine/modals';
 import { IconPencil, IconTrash } from '@tabler/icons-react';
 import { createFileRoute } from '@tanstack/react-router'
-import CategoryFrom from '~/components/Categories/CategoryFrom'
-import { CreateCategoryArg, UpdateCategoryArg, useCreateCategory, useDeleteCategory, useFetchGroupedCategories, useUpdateCategory } from '~/services/category';
+import { useDeleteCategory, useFetchGroupedCategories } from '~/services/category';
 import { cn } from '~/utils/cn';
-import { useState } from 'react';
+
 import ReactDOM from 'react-dom';
+import { Category } from '~/types/types';
 
 function CategoriesPage() {
 
     const isMobile = useMediaQuery("(max-width: 767px)");
     const portal = document.getElementById('title');
-    const [currentCategory, setCurrentCategory] = useState<UpdateCategoryArg | null>(null);
 
-    const [openedCreateModal, { open: openCreateModal, close: closeCreateModal }] = useDisclosure(false);
-    const [openedEditModal, { open: openEditModal, close: closeEditModal }] = useDisclosure(false);
-
-
-    const [createCategory] = useCreateCategory();
     const [groupedCategories] = useFetchGroupedCategories();
 
-    const [updateCategory] = useUpdateCategory();
     const [deleteCategory] = useDeleteCategory();
-
-
-
-    const handleCreateSubmit = (values: CreateCategoryArg) => {
-        createCategory(values);
-        closeCreateModal();
-    }
-
-    const handleEditSubmit = (values: UpdateCategoryArg['data'], id: string) => {
-        updateCategory({ id, data: values });
-        closeEditModal();
-        setCurrentCategory(null);
-    };
-
-    const handleOpenEditModal = (category: UpdateCategoryArg) => {
-        setCurrentCategory(category);
-        openEditModal();
-    };
 
     const handleDeleteCategory = (id: string) => {
         deleteCategory(id);
+    }
+
+    const handleCreateCategory = () => {
+        openContextModal({
+            modal: 'createCategoryModal',
+            title: 'Новая категория',
+            innerProps: {},
+            size: 'xl',
+        });
+    }
+
+    const handleUpdateCategory = (item: Category) => {
+        openContextModal({
+            modal: 'updateCategoryModal',
+            title: 'Редактировать категорию',
+            innerProps: {
+                id: item.id,
+                name: item.name,
+                color: item.color,
+                isIncome: item.isIncome,
+            },
+            size: 'xl',
+        });
     }
 
     const openDeleteModal = (id: string) => modals.openConfirmModal({
@@ -54,6 +52,7 @@ function CategoriesPage() {
         cancelProps: { color: '' },
         onConfirm: () => handleDeleteCategory(id),
     });
+
 
     return (
         <>
@@ -82,7 +81,7 @@ function CategoriesPage() {
                         )}
 
                         {groupedCategories.income.map((item, index) => (
-                            <div className='flex justify-between bg-[#2B244C] bg-opacity-80 p-2 rounded-md'>
+                            <div className='flex justify-between bg-[#2B244C] bg-opacity-80 p-2 rounded-md mb-1'>
                                 <div key={item.id} className='flex gap-2 items-center '>
                                     <div className='w-6 h-6 rounded-md' style={{ backgroundColor: item.color }}></div>
                                     <Text>{index + 1}. {item.name}</Text>
@@ -91,12 +90,8 @@ function CategoriesPage() {
                                     <IconPencil
                                         size={25}
                                         strokeWidth={1.5}
-                                        onClick={() =>
-                                            handleOpenEditModal({
-                                                id: item.id,
-                                                data: { name: item.name, color: item.color, isIncome: item.isIncome },
-                                            })
-                                        } />
+                                        onClick={() => handleUpdateCategory(item)}
+                                    />
                                     <IconTrash
                                         size={25}
                                         strokeWidth={1.5}
@@ -119,7 +114,7 @@ function CategoriesPage() {
                         )}
 
                         {groupedCategories.expense.map((item, index) => (
-                            <div className='flex justify-between bg-[#2B244C] bg-opacity-80 p-2 rounded-md'>
+                            <div className='flex justify-between bg-[#2B244C] bg-opacity-80 p-2 rounded-md mb-1'>
                                 <div key={item.id} className='flex gap-2 items-center'>
                                     <div className='w-6 h-6 rounded-md' style={{ backgroundColor: item.color }}></div>
                                     <Text>{index + 1}. {item.name}</Text>
@@ -128,12 +123,8 @@ function CategoriesPage() {
                                     <IconPencil
                                         size={25}
                                         strokeWidth={1.5}
-                                        onClick={() =>
-                                            handleOpenEditModal({
-                                                id: item.id,
-                                                data: { name: item.name, color: item.color, isIncome: item.isIncome },
-                                            })
-                                        } />
+                                        onClick={() => handleUpdateCategory(item)}
+                                    />
                                     <IconTrash
                                         size={25}
                                         strokeWidth={1.5}
@@ -146,18 +137,17 @@ function CategoriesPage() {
                     </div>
                 </div>
 
-                {!openedCreateModal && (
-                    <Button
-                        radius='md'
-                        fullWidth
-                        onClick={openCreateModal}
-                    >
-                        Добавить категорию
-                    </Button>
-                )}
+
+                <Button
+                    radius='md'
+                    fullWidth
+                    onClick={handleCreateCategory}
+                >
+                    Добавить категорию
+                </Button>
 
 
-                <Modal
+                {/* <Modal
                     opened={openedCreateModal}
                     onClose={closeCreateModal}
                     radius='md'
@@ -165,9 +155,9 @@ function CategoriesPage() {
                     size="sm"
                 >
                     <CategoryFrom onSubmit={handleCreateSubmit} />
-                </Modal>
+                </Modal> */}
 
-                <Modal
+                {/* <Modal
                     opened={openedEditModal}
                     onClose={closeEditModal}
                     radius="md"
@@ -178,7 +168,7 @@ function CategoriesPage() {
                         defaultValues={currentCategory?.data}
                         onSubmit={(values) => handleEditSubmit(values, currentCategory!.id)}
                     />
-                </Modal>
+                </Modal> */}
             </div>
         </>
     )

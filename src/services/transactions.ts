@@ -22,7 +22,8 @@ export type UpdateTransaction = z.infer<typeof updateTransactionSchema>;
 export type TransactionFilterArg = {
     isIncome?: boolean;
     categoryId?: string;
-    date?: string;
+    fromDate?: Date;
+    toDate?: Date;
 }
 
 export type UpdateTransactionArg = {
@@ -62,7 +63,7 @@ export const useCreateTransaction = () => {
         mutationFn: createTransaction,
         onSuccess: () => {
             void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'transaction' });
-            void queryClient.invalidateQueries({ queryKey: ['me'] });
+            void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'me' });
             toast.success('Транзакция успешно создана');
         }
     });

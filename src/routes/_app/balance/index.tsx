@@ -1,4 +1,4 @@
-import { Button, Modal, Select, Text } from '@mantine/core'
+import { Button, Select, Text } from '@mantine/core'
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { balancePageFiltersSchema } from '~/schemes/pageSearch/balance.search'
 import { PieChart } from '@mantine/charts';
@@ -6,13 +6,12 @@ import dayjs from 'dayjs';
 import { useGetMe } from '~/services/getMe';
 import ReactDOM from 'react-dom';
 import { DatePickerInput, DateValue } from '@mantine/dates';
-import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { useMediaQuery } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import { IconCalendar } from '@tabler/icons-react';
 import '~/index.css'
 import { useFetchCategories } from '~/services/category';
-import CreateTransactionForm from '~/components/Transactions/CreateTransactionForm';
-import { CreateTransactionArg, useCreateTransaction } from '~/services/transactions';
+import { openContextModal } from '@mantine/modals';
 
 export const data = [
   { name: 'Такси', value: 1236, color: '#fa5252' },
@@ -24,9 +23,6 @@ export const data = [
 
 function BalancePage() {
 
-  const [openedCreateIncomeModal, { open: openCreateIncomeModal, close: closeCreateIncomeModal }] = useDisclosure(false);
-  const [openedCreateExpenseModal, { open: openCreateExpenseModal, close: closeCreateExpenseModal }] = useDisclosure(false);
-
   const navigate = useNavigate({ from: "/balance" });
   const search = useSearch({ from: "/_app/balance/" });
   const [me] = useGetMe()
@@ -35,14 +31,6 @@ function BalancePage() {
   const portal = document.getElementById('title')
 
   const isMobile = useMediaQuery("(max-width: 767px)");
-  const [createTransaction] = useCreateTransaction();
-
-  const handleCreateTransactionSubmit = (values: CreateTransactionArg) => {
-    createTransaction(values);
-    closeCreateIncomeModal();
-    closeCreateExpenseModal();
-  }
-
 
   const [dates, setDates] = useState<[DateValue, DateValue]>([
     search.fromDate ?? dayjs().startOf("month").toDate(),
@@ -64,13 +52,24 @@ function BalancePage() {
   }, [dates, navigate]);
 
 
+  const handleCreateTransaction = (isIncome: boolean) => {
+    openContextModal({
+      modal: 'createTransactionModal',
+      title: 'Новая транзакция',
+      innerProps: {
+        isIncome,
+      },
+      size: 'xl',
+    });
+  }
+
   return (
     <>
       <div>
         {portal && (
           ReactDOM.createPortal(
             <Text size='xl'>
-              Balance
+              Баланс
             </Text>,
             portal
           )
@@ -136,7 +135,7 @@ function BalancePage() {
             radius="md"
             fullWidth
             size="md"
-            onClick={openCreateIncomeModal}
+            onClick={() => handleCreateTransaction(true)}
           >
             Доход +
           </Button>
@@ -146,7 +145,7 @@ function BalancePage() {
             radius="md"
             fullWidth
             size="md"
-            onClick={openCreateExpenseModal}
+            onClick={() => handleCreateTransaction(false)}
           >
             Расход -
           </Button>
@@ -165,34 +164,9 @@ function BalancePage() {
 
       </div>
 
-      <Modal
-        opened={openedCreateIncomeModal}
-        onClose={closeCreateIncomeModal}
-        radius='md'
-        title="Новая транзакция"
-        size="sm"
-      >
-        <CreateTransactionForm isIncome={true} onSubmit={handleCreateTransactionSubmit} />
-      </Modal>
-
-      <Modal
-        opened={openedCreateExpenseModal}
-        onClose={closeCreateExpenseModal}
-        radius='md'
-        title="Новая транзакция"
-        size="sm"
-      >
-        <CreateTransactionForm isIncome={false} onSubmit={handleCreateTransactionSubmit} />
-      </Modal>
-
     </>
   )
 }
-
-
-
-
-
 
 
 export const Route = createFileRoute('/_app/balance/')({

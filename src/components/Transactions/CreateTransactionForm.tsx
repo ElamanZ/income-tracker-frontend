@@ -11,6 +11,7 @@ import { useFetchGroupedCategories } from "~/services/category";
 import { categoryTypeSelectItems } from "../Categories/CategoryFrom";
 
 
+
 type Props = {
   defaultValues?: Partial<CreateTransactionArg> | null;
   onSubmit(values: CreateTransactionArg): void;
@@ -39,6 +40,9 @@ const CreateTransactionForm = ({ onSubmit, isIncome, defaultValues = {} }: Props
     },
     validate: zodResolver(createTransactionSchema),
   });
+
+
+
 
   console.log(form.values, 'values');
   console.log(form.errors, 'errors');
