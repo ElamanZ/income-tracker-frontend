@@ -3,11 +3,11 @@
 export type ProfileEntity = {
   id: string;
   avatarUrl: string | null;
-  phone: string | null;
+  phone: string;
   updatedAt: string;
   createdAt: string;
-  firstName?: string | null;
-  lastName?: string | null;
+  firstName?: string;
+  lastName?: string;
   balance: number;
 };
 

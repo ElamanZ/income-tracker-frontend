@@ -5,7 +5,6 @@ import { baseAxiosAnon } from '../utils/baseAxios';
 import { z } from 'zod';
 import { ProfileEntity } from '../types/types';
 import { Me } from './getMe';
-import { useNavigate } from '@tanstack/react-router';
 import { Tokens } from './tokens';
 
 
@@ -32,13 +31,11 @@ export const login = async (arg: LoginArg): Promise<Me> => {
 
 export const useLogin = () => {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: login,
     onSuccess(me) {
       queryClient.setQueryData<Me>(['me'], me);
-      navigate({ to: '/balance' })
       toast.success('Вы успешно вошли в аккаунт');
     },
     onError(error) {

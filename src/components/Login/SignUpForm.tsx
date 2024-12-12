@@ -29,7 +29,7 @@ const SignUpForm = ({ onSubmit, loading }: Props) => {
         >
             <div className="flex justify-between items-center">
                 <Link to="/signin" from="/signup">
-                    <IconChevronLeft color='black' strokeWidth={1.2} size={30} />
+                    <IconChevronLeft strokeWidth={1.2} size={30} />
                 </Link>
                 <Text
                     size='lg'
@@ -37,7 +37,7 @@ const SignUpForm = ({ onSubmit, loading }: Props) => {
                 >
                     Регистрация
                 </Text>
-                <div className="w-10"></div>
+                <div className="w-7"></div>
             </div>
 
             <div className="flex-col flex">
@@ -46,8 +46,6 @@ const SignUpForm = ({ onSubmit, loading }: Props) => {
                     label="Имя"
                     placeholder="Имя"
                     className="w-[285px]"
-                    required
-                    variant="filled"
                     radius='md'
                     {...form.getInputProps("firstName")}
                     autoComplete="firstName"
@@ -58,8 +56,6 @@ const SignUpForm = ({ onSubmit, loading }: Props) => {
                     label="Фамилия"
                     placeholder="Фамилия"
                     className="w-[285px]"
-                    required
-                    variant="filled"
                     radius='md'
                     {...form.getInputProps("lastName")}
                     autoComplete="lastName"
@@ -67,10 +63,9 @@ const SignUpForm = ({ onSubmit, loading }: Props) => {
 
                 <PhoneInput
                     mt="sm"
+                    className="w-[285px]"
                     label="Номер телефона"
-                    required
                     placeholder="+996*********"
-                    variant="filled"
                     radius='md'
                     {...form.getInputProps("phone")}
                 />
@@ -81,8 +76,7 @@ const SignUpForm = ({ onSubmit, loading }: Props) => {
                         mt="sm"
                         label="Пароль"
                         placeholder="Пароль"
-                        required
-                        variant="filled"
+                        className="w-[285px]"
                         radius='md'
                         {...form.getInputProps("password")}
                         autoComplete="password"
@@ -94,9 +88,8 @@ const SignUpForm = ({ onSubmit, loading }: Props) => {
                 <PasswordInput
                     mt="sm"
                     label="Повторите пароль"
+                    className="w-[285px]"
                     placeholder="Повторите пароль"
-                    variant="filled"
-                    required
                     radius='md'
                     {...form.getInputProps("passwordConfirm")}
                 />
@@ -107,7 +100,6 @@ const SignUpForm = ({ onSubmit, loading }: Props) => {
                 mt="lg"
                 size="sm"
                 radius='md'
-                color="#62B440"
                 fullWidth
                 disabled={loading}
             >

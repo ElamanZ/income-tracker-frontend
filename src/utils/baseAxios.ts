@@ -10,8 +10,6 @@ const requestInterceptor = <T1, T2 extends InternalAxiosRequestConfig<T1>>(confi
   if (me) {
     headers.Authorization = `Bearer ${me.tokens.accessToken}`;
   }
-  headers['x-city-id'] = 'bishkek';
-  headers['x-country-id'] = 'kyrgyzstan';
   return { ...config, headers };
 };
 
@@ -19,12 +17,6 @@ const errorResponseInterceptor = async (error: unknown): Promise<AxiosResponse<u
   if (isAxiosError(error) && error.response?.status === 401) { //! Unauthorized
     try {
       const me = await refreshMe();
-      // const { data } = await baseAxiosAnon.post<Tokens>('/auth/refresh/', null, {
-      //   headers: {
-      //     'Authorization': `Bearer ${me.tokens.refreshToken}`,
-      //   }
-      // });
-
       storage.set('me', me);
       queryClient.setQueryData(['me'], me);
       const config: AxiosRequestConfig<unknown> = {
@@ -49,16 +41,14 @@ const errorResponseInterceptor = async (error: unknown): Promise<AxiosResponse<u
 export const baseAxios = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api/v1`,
   headers: {
-    'x-country-id': 'kyrgyzstan',
-    'x-city-id': 'bishkek',
+
   },
 });
 
 export const baseAxiosAnon = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api/v1`,
   headers: {
-    'x-country-id': 'kyrgyzstan',
-    'x-city-id': 'bishkek',
+
   },
 });
 

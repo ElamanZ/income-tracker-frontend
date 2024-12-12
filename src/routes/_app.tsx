@@ -1,17 +1,18 @@
-import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
+import { createFileRoute, Outlet, redirect, useNavigate } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import Layout from '~/components/Layout/Layout'
 import { useGetMe } from '~/services/getMe'
 
 
 function AppLayout() {
-  const [me] = useGetMe()
+  const navigate = useNavigate();
+  const [me] = useGetMe();
 
   useEffect(() => {
     if (!me) {
-      location.replace(`/signin?redirect=${location.pathname}`)
+      navigate({ to: '/signin' })
     }
-  }, [me])
+  }, [me]);
 
   return (
     <Layout>
@@ -23,7 +24,6 @@ function AppLayout() {
 
 export const Route = createFileRoute('/_app')({
   component: AppLayout,
-
   beforeLoad: async ({ location, context }) => {
     const isAuth = !!context.me
 
