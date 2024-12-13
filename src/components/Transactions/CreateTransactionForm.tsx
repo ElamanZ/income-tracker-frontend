@@ -8,7 +8,7 @@ import { IconCalendar } from "@tabler/icons-react";
 import { useState } from "react";
 import dayjs from "dayjs";
 import { useFetchGroupedCategories } from "~/services/category";
-import { categoryTypeSelectItems } from "../Categories/CategoryFrom";
+import { categoryTypeSelectItems } from "~/types/enums";
 
 
 

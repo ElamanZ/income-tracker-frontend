@@ -18,6 +18,7 @@ import { Route as AuthSignupImport } from './routes/_auth/signup'
 import { Route as AuthSigninImport } from './routes/_auth/signin'
 import { Route as AppTransactionsIndexImport } from './routes/_app/transactions/index'
 import { Route as AppSettingsIndexImport } from './routes/_app/settings/index'
+import { Route as AppDebtsIndexImport } from './routes/_app/debts/index'
 import { Route as AppCategoriesIndexImport } from './routes/_app/categories/index'
 import { Route as AppBalanceIndexImport } from './routes/_app/balance/index'
 
@@ -60,6 +61,12 @@ const AppTransactionsIndexRoute = AppTransactionsIndexImport.update({
 const AppSettingsIndexRoute = AppSettingsIndexImport.update({
   id: '/settings/',
   path: '/settings/',
+  getParentRoute: () => AppRoute,
+} as any)
+
+const AppDebtsIndexRoute = AppDebtsIndexImport.update({
+  id: '/debts/',
+  path: '/debts/',
   getParentRoute: () => AppRoute,
 } as any)
 
@@ -128,6 +135,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCategoriesIndexImport
       parentRoute: typeof AppImport
     }
+    '/_app/debts/': {
+      id: '/_app/debts/'
+      path: '/debts'
+      fullPath: '/debts'
+      preLoaderRoute: typeof AppDebtsIndexImport
+      parentRoute: typeof AppImport
+    }
     '/_app/settings/': {
       id: '/_app/settings/'
       path: '/settings'
@@ -150,6 +164,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppBalanceIndexRoute: typeof AppBalanceIndexRoute
   AppCategoriesIndexRoute: typeof AppCategoriesIndexRoute
+  AppDebtsIndexRoute: typeof AppDebtsIndexRoute
   AppSettingsIndexRoute: typeof AppSettingsIndexRoute
   AppTransactionsIndexRoute: typeof AppTransactionsIndexRoute
 }
@@ -157,6 +172,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppBalanceIndexRoute: AppBalanceIndexRoute,
   AppCategoriesIndexRoute: AppCategoriesIndexRoute,
+  AppDebtsIndexRoute: AppDebtsIndexRoute,
   AppSettingsIndexRoute: AppSettingsIndexRoute,
   AppTransactionsIndexRoute: AppTransactionsIndexRoute,
 }
@@ -182,6 +198,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof AuthSignupRoute
   '/balance': typeof AppBalanceIndexRoute
   '/categories': typeof AppCategoriesIndexRoute
+  '/debts': typeof AppDebtsIndexRoute
   '/settings': typeof AppSettingsIndexRoute
   '/transactions': typeof AppTransactionsIndexRoute
 }
@@ -193,6 +210,7 @@ export interface FileRoutesByTo {
   '/signup': typeof AuthSignupRoute
   '/balance': typeof AppBalanceIndexRoute
   '/categories': typeof AppCategoriesIndexRoute
+  '/debts': typeof AppDebtsIndexRoute
   '/settings': typeof AppSettingsIndexRoute
   '/transactions': typeof AppTransactionsIndexRoute
 }
@@ -206,6 +224,7 @@ export interface FileRoutesById {
   '/_auth/signup': typeof AuthSignupRoute
   '/_app/balance/': typeof AppBalanceIndexRoute
   '/_app/categories/': typeof AppCategoriesIndexRoute
+  '/_app/debts/': typeof AppDebtsIndexRoute
   '/_app/settings/': typeof AppSettingsIndexRoute
   '/_app/transactions/': typeof AppTransactionsIndexRoute
 }
@@ -219,6 +238,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/balance'
     | '/categories'
+    | '/debts'
     | '/settings'
     | '/transactions'
   fileRoutesByTo: FileRoutesByTo
@@ -229,6 +249,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/balance'
     | '/categories'
+    | '/debts'
     | '/settings'
     | '/transactions'
   id:
@@ -240,6 +261,7 @@ export interface FileRouteTypes {
     | '/_auth/signup'
     | '/_app/balance/'
     | '/_app/categories/'
+    | '/_app/debts/'
     | '/_app/settings/'
     | '/_app/transactions/'
   fileRoutesById: FileRoutesById
@@ -280,6 +302,7 @@ export const routeTree = rootRoute
       "children": [
         "/_app/balance/",
         "/_app/categories/",
+        "/_app/debts/",
         "/_app/settings/",
         "/_app/transactions/"
       ]
@@ -305,6 +328,10 @@ export const routeTree = rootRoute
     },
     "/_app/categories/": {
       "filePath": "_app/categories/index.tsx",
+      "parent": "/_app"
+    },
+    "/_app/debts/": {
+      "filePath": "_app/debts/index.tsx",
       "parent": "/_app"
     },
     "/_app/settings/": {

@@ -22,8 +22,15 @@ export type UpdateTransaction = z.infer<typeof updateTransactionSchema>;
 export type TransactionFilterArg = {
     isIncome?: boolean;
     categoryId?: string;
-    fromDate?: Date;
-    toDate?: Date;
+    date?: Date;
+    fromDate?: Date | null;
+    toDate?: Date | null;
+}
+
+export type TransactionExpensesFilterArg = {
+    categoryId?: string;
+    fromDate?: Date | null;
+    toDate?: Date | null;
 }
 
 export type UpdateTransactionArg = {
@@ -38,6 +45,16 @@ export const createTransaction = async (arg: CreateTransactionArg) => {
 
 export const fetchTransactions = async (arg: TransactionFilterArg = {}) => {
     const { data } = await baseAxios.get<Transaction[]>('/transactions', { params: arg });
+    return data;
+}
+
+export const fetchExpensesTransactions = async (arg: TransactionExpensesFilterArg = {}) => {
+    const { data } = await baseAxios.get<number>('/transactions/expenses', { params: arg });
+    return data;
+}
+
+export const fetchIncomesTransactions = async (arg: TransactionExpensesFilterArg = {}) => {
+    const { data } = await baseAxios.get<number>('/transactions/incomes', { params: arg });
     return data;
 }
 
@@ -65,6 +82,9 @@ export const useCreateTransaction = () => {
             void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'transaction' });
             void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'me' });
             toast.success('Транзакция успешно создана');
+        },
+        onError: () => {
+            toast.error('Произошла ошибка');
         }
     });
     return [mutation.mutate, mutation] as const
@@ -76,6 +96,22 @@ export const useFetchTransactions = (arg: TransactionFilterArg = {}) => {
         queryFn: () => fetchTransactions(arg),
     })
     return [query.data ?? [], query] as const
+}
+
+export const useFetchExpensesTransactions = (arg: TransactionExpensesFilterArg = {}) => {
+    const query = useQuery({
+        queryKey: ['transaction', 'expenses', arg],
+        queryFn: () => fetchExpensesTransactions(arg),
+    })
+    return [query.data ?? 0, query] as const
+}
+
+export const useFetchIncomesTransactions = (arg: TransactionExpensesFilterArg = {}) => {
+    const query = useQuery({
+        queryKey: ['transaction', 'incomes', arg],
+        queryFn: () => fetchIncomesTransactions(arg),
+    })
+    return [query.data ?? 0, query] as const
 }
 
 export const useFetchTransactionById = (id: string) => {
@@ -95,6 +131,9 @@ export const useUpdateTransaction = () => {
             void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'me' });
             queryClient.setQueryData(['transaction', data.id], data)
             toast.success('Транзакция успешно обновлена');
+        },
+        onError: () => {
+            toast.error('Произошла ошибка');
         }
     });
     return [mutation.mutate, mutation] as const
@@ -108,6 +147,9 @@ export const useDeleteTransaction = () => {
             void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'transaction' });
             void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'me' });
             toast.success('Транзакция успешно удалена');
+        },
+        onError: () => {
+            toast.error('Произошла ошибка');
         }
     });
     return [mutation.mutate, mutation] as const

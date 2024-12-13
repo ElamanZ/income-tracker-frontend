@@ -1,32 +1,15 @@
-import { ColorPicker, SegmentedControl, SegmentedControlItem, Text, TextInput } from "@mantine/core"
+import { ColorPicker, SegmentedControl, Text, TextInput } from "@mantine/core"
 import { useForm, zodResolver } from "@mantine/form";
 import { useMediaQuery } from "@mantine/hooks";
 import { CreateCategoryArg, createCategorySchema } from "~/services/category";
 import CustomCreateBtn from "../Buttons/CustomCreateBtn";
+import { categoryTypeSelectItems } from "~/types/enums";
 
 
 type Props = {
     defaultValues?: Partial<CreateCategoryArg> | null;
     onSubmit(values: CreateCategoryArg): void;
 };
-
-export const CategoryType = {
-    isIncome: true,
-    isNotIncome: false,
-} as const;
-
-export type CategoryType = (typeof CategoryType)[keyof typeof CategoryType];
-
-export const categoryTypeSelectItems: SegmentedControlItem[] = [
-    {
-        value: "true",
-        label: "Доход",
-    },
-    {
-        value: "false",
-        label: "Расход",
-    },
-];
 
 const CategoryFrom = ({ onSubmit, defaultValues = {} }: Props) => {
 

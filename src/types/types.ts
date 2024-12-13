@@ -45,6 +45,7 @@ export type Debt = {
   amount: number;
   name: string;
   comment: string | null;
+  date: string;
   createdAt: string;
   updatedAt: string;
   userId: string;

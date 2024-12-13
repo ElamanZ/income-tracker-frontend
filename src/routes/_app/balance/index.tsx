@@ -1,4 +1,4 @@
-import { Button, Select, Text } from '@mantine/core'
+import { Button, Loader, Select, Text } from '@mantine/core'
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { balancePageFiltersSchema } from '~/schemes/pageSearch/balance.search'
 import { PieChart } from '@mantine/charts';
@@ -12,6 +12,7 @@ import { IconCalendar } from '@tabler/icons-react';
 import '~/index.css'
 import { useFetchCategories } from '~/services/category';
 import { openContextModal } from '@mantine/modals';
+import { useFetchExpensesTransactions, useFetchIncomesTransactions } from '~/services/transactions';
 
 export const data = [
   { name: 'Такси', value: 1236, color: '#fa5252' },
@@ -23,21 +24,33 @@ export const data = [
 
 function BalancePage() {
 
+  const portal = document.getElementById('title')
+  const isMobile = useMediaQuery("(max-width: 767px)");
+
   const navigate = useNavigate({ from: "/balance" });
   const search = useSearch({ from: "/_app/balance/" });
-  const [me] = useGetMe()
-  const [categories] = useFetchCategories()
-
-  const portal = document.getElementById('title')
-
-  const isMobile = useMediaQuery("(max-width: 767px)");
 
   const [dates, setDates] = useState<[DateValue, DateValue]>([
     search.fromDate ?? dayjs().startOf("month").toDate(),
     search.toDate ?? dayjs().endOf("month").toDate(),
   ]);
-  const today = dayjs().minute(0).second(0).millisecond(0);
 
+  const [me] = useGetMe()
+  const [categories] = useFetchCategories()
+
+  const [expense, { isLoading }] = useFetchExpensesTransactions({
+    categoryId: search.categoryId ?? '',
+    fromDate: search.fromDate ?? null,
+    toDate: search.toDate ?? null,
+  })
+
+  const [incomes, { isLoading: isLoadingIncomes }] = useFetchIncomesTransactions({
+    categoryId: search.categoryId ?? '',
+    fromDate: search.fromDate ?? null,
+    toDate: search.toDate ?? null,
+  })
+
+  const today = dayjs().minute(0).second(0).millisecond(0);
 
 
   useEffect(() => {
@@ -80,7 +93,7 @@ function BalancePage() {
 
         <div className='w-full bg-custom-bg-dark border border-white bg-opacity-65 flex flex-col gap-2 text-center rounded-xl p-2 '>
           <Text className='font-semibold text-2xl'>Баланс: {me?.profile.balance} сом</Text>
-          <Text className='text-center text-lg text-[#B2B2B7]'>Затраты: {dayjs(search.fromDate).format('DD.MM.YY')} - {dayjs(search.toDate).format('DD.MM.YY')}</Text>
+          <Text className='text-center text-lg text-[#B2B2B7]'>Период: {dayjs(search.fromDate).format('DD.MM.YY')} - {dayjs(search.toDate).format('DD.MM.YY')}</Text>
         </div>
 
         <div className='flex justify-between gap-2'>
@@ -92,9 +105,19 @@ function BalancePage() {
             radius='md'
             placeholder="Категории"
             data={categories.map((item) => ({
-              value: item.color,
+              value: item.id,
               label: item.name,
             }))}
+            onChange={(value) => {
+              navigate({
+                to: "/balance",
+                search: (prev) => ({
+                  ...prev,
+                  categoryId: value || null,
+                }),
+              })
+            }}
+            value={search.categoryId}
             searchable
             clearable
           />
@@ -109,11 +132,26 @@ function BalancePage() {
             valueFormat='DD.MM'
             defaultValue={[today.toDate(), today.toDate()]}
             onChange={(value) => setDates(value)}
-
           />
         </div>
 
-        <Text className='font-semibold text-xl text-center'>Потрачено: {me?.profile.balance} сом</Text>
+        <div>
+          {isLoading ? (
+            <div className='w-full flex justify-center items-center'>
+              <Loader />
+            </div>
+          ) : (
+            <Text className='font-semibold text-lg text-center'>Потрачено: {expense} сом</Text>
+          )}
+
+          {isLoadingIncomes ? (
+            <div className='w-full flex justify-center items-center'>
+              <Loader />
+            </div>
+          ) : (
+            <Text className='font-semibold text-lg text-center'>Заработано: {incomes} сом</Text>
+          )}
+        </div>
 
         <div className='flex justify-center'>
           <PieChart
@@ -126,7 +164,6 @@ function BalancePage() {
             size={260}
             data={data}
           />
-
         </div>
 
         <div className='flex gap-2 mt-3'>
@@ -150,6 +187,7 @@ function BalancePage() {
             Расход -
           </Button>
         </div>
+
         <Button
           color="#5D30D8"
           radius="md"
@@ -161,9 +199,7 @@ function BalancePage() {
         >
           Долг
         </Button>
-
       </div>
-
     </>
   )
 }

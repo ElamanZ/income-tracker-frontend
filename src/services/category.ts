@@ -63,6 +63,9 @@ export const useCreateCategory = () => {
         onSuccess: () => {
             void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'category' });
             toast.success('Категория успешно создана');
+        },
+        onError: () => {
+            toast.error('Произошла ошибка');
         }
     });
     return [mutation.mutate, mutation] as const
@@ -100,6 +103,9 @@ export const useUpdateCategory = () => {
             void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'category' });
             queryClient.setQueryData(['category', data.id], data)
             toast.success('Категория успешно обновлена');
+        },
+        onError: () => {
+            toast.error('Произошла ошибка');
         }
     });
     return [mutation.mutate, mutation] as const
@@ -112,6 +118,9 @@ export const useDeleteCategory = () => {
         onSuccess: () => {
             void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'category' });
             toast.success('Категория успешно удалена');
+        },
+        onError: () => {
+            toast.error('Удаление не возможно, категория используется в транзакциях');
         }
     });
     return [mutation.mutate, mutation] as const
