@@ -1,8 +1,8 @@
-import { boolean, z } from 'zod';
+import { z } from 'zod';
 
 export const debtsPageFiltersSchema = z.object({
-  active: boolean().default(true),
-  isMyDebt: z.boolean().default(true),
+  active: z.enum(['all', 'true', 'false']).default('all'),
+  isMyDebt: z.enum(['all', 'true', 'false']).default('all'),
   fromDate: z.string().or(z.date())
     .transform(val => !val ? null : val instanceof Date ? val : new Date(val))
     .pipe(z.date().nullish()).nullish(),

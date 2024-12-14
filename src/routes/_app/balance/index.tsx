@@ -76,6 +76,15 @@ function BalancePage() {
     });
   }
 
+  const handleCreateDebt = () => {
+    openContextModal({
+      modal: 'createDebtModal',
+      title: 'Новый долг',
+      innerProps: {},
+      size: 'xl',
+    });
+  }
+
   return (
     <>
       <div>
@@ -193,9 +202,7 @@ function BalancePage() {
           radius="md"
           fullWidth
           size="md"
-          onClick={() => {
-            console.log('Расход -')
-          }}
+          onClick={handleCreateDebt}
         >
           Долг
         </Button>

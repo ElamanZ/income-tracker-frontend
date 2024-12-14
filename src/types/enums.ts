@@ -18,8 +18,24 @@ export const categoryTypeSelectItems: SegmentedControlItem[] = [
     },
 ];
 
+export const debtTypeSelectItems: SegmentedControlItem[] = [
+    {
+        value: "true",
+        label: "Мой долг",
+    },
+    {
+        value: "false",
+        label: "Мне должны",
+    },
+];
+
+
 
 export const debtsFilterActive: ComboboxData = [
+    {
+        value: "all",
+        label: "Все",
+    },
     {
         value: "true",
         label: "Активные",
@@ -31,6 +47,10 @@ export const debtsFilterActive: ComboboxData = [
 ];
 
 export const debtsFilterIsMyDebt: ComboboxData = [
+    {
+        value: "all",
+        label: "Все",
+    },
     {
         value: "true",
         label: "Мои долги",
