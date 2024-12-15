@@ -19,7 +19,7 @@ type Props = {
 };
 
 
-const CreateTransactionForm = ({ onSubmit, isIncome, defaultValues = {} }: Props) => {
+const TransactionForm = ({ onSubmit, isIncome, defaultValues = {} }: Props) => {
 
   const isMobile = useMediaQuery("(max-width: 767px)");
   const today = dayjs()
@@ -128,4 +128,4 @@ const CreateTransactionForm = ({ onSubmit, isIncome, defaultValues = {} }: Props
   )
 }
 
-export default CreateTransactionForm
+export default TransactionForm

@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { z } from "zod";
 import { dateString } from "~/schemes/dateString.schema";
-import { Transaction } from "~/types/types";
+import { Transaction, TransactionByCategory } from "~/types/types";
 import { baseAxios } from "~/utils/baseAxios";
 
 
@@ -45,6 +45,11 @@ export const createTransaction = async (arg: CreateTransactionArg) => {
 
 export const fetchTransactions = async (arg: TransactionFilterArg = {}) => {
     const { data } = await baseAxios.get<Transaction[]>('/transactions', { params: arg });
+    return data;
+}
+
+export const fetchTransactionByCategory = async (arg: TransactionFilterArg = {}) => {
+    const { data } = await baseAxios.get<TransactionByCategory[]>('/transactions/categories-summary', { params: arg });
     return data;
 }
 
@@ -94,6 +99,14 @@ export const useFetchTransactions = (arg: TransactionFilterArg = {}) => {
     const query = useQuery({
         queryKey: ['transaction', arg],
         queryFn: () => fetchTransactions(arg),
+    })
+    return [query.data ?? [], query] as const
+}
+
+export const useFetchTransactionByCategory = (arg: TransactionFilterArg = {}) => {
+    const query = useQuery({
+        queryKey: ['transaction', 'categories-summary', arg],
+        queryFn: () => fetchTransactionByCategory(arg),
     })
     return [query.data ?? [], query] as const
 }

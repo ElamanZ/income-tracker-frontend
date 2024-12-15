@@ -1,5 +1,5 @@
 import { ContextModalProps } from "@mantine/modals";
-import CreateTransactionForm from "../Transactions/CreateTransactionForm";
+import TransactionForm from "../Transactions/TransactionForm";
 import { CreateTransactionArg, useCreateTransaction } from "~/services/transactions";
 
 type Props = ContextModalProps<{
@@ -16,7 +16,7 @@ const CreateTransactionModal = (props: Props) => {
     }
 
     return (
-        <CreateTransactionForm isIncome={props.innerProps.isIncome} onSubmit={handleCreateSubmit} />
+        <TransactionForm isIncome={props.innerProps.isIncome} onSubmit={handleCreateSubmit} />
     )
 }
 

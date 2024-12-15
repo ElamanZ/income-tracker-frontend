@@ -12,15 +12,15 @@ import { IconCalendar } from '@tabler/icons-react';
 import '~/index.css'
 import { useFetchCategories } from '~/services/category';
 import { openContextModal } from '@mantine/modals';
-import { useFetchExpensesTransactions, useFetchIncomesTransactions } from '~/services/transactions';
+import { useFetchExpensesTransactions, useFetchIncomesTransactions, useFetchTransactionByCategory } from '~/services/transactions';
 
-export const data = [
-  { name: 'Такси', value: 1236, color: '#fa5252' },
-  { name: 'Еда', value: 5388, color: 'yellow.6' },
-  { name: 'Транспорт', value: 982, color: 'teal.6' },
-  { name: 'Домой', value: 3000, color: 'green.6' },
-  { name: 'Тренирова', value: 3000, color: 'gray.6' },
-];
+// export const dataForPieChart = [
+//   { name: 'Такси', value: 1236, color: '#fa5252' },
+//   { name: 'Еда', value: 5388, color: 'yellow.6' },
+//   { name: 'Транспорт', value: 982, color: 'teal.6' },
+//   { name: 'Домой', value: 3000, color: 'green.6' },
+//   { name: 'Тренирова', value: 3000, color: 'gray.6' },
+// ];
 
 function BalancePage() {
 
@@ -37,6 +37,11 @@ function BalancePage() {
 
   const [me] = useGetMe()
   const [categories] = useFetchCategories()
+  const [dataForPieChart] = useFetchTransactionByCategory({
+    categoryId: search.categoryId ?? '',
+    fromDate: search.fromDate ?? null,
+    toDate: search.toDate ?? null,
+  })
 
   const [expense, { isLoading }] = useFetchExpensesTransactions({
     categoryId: search.categoryId ?? '',
@@ -84,6 +89,10 @@ function BalancePage() {
       size: 'xl',
     });
   }
+
+
+  console.log(dataForPieChart, 'dataForPieChart');
+
 
   return (
     <>
@@ -144,6 +153,9 @@ function BalancePage() {
           />
         </div>
 
+
+
+
         <div>
           {isLoading ? (
             <div className='w-full flex justify-center items-center'>
@@ -162,18 +174,24 @@ function BalancePage() {
           )}
         </div>
 
-        <div className='flex justify-center'>
-          <PieChart
-            withTooltip
-            tooltipDataSource="segment"
-            labelsPosition="inside"
-            labelsType="value"
-            withLabels
-            strokeWidth={1}
-            size={260}
-            data={data}
-          />
-        </div>
+        {dataForPieChart.length !== 0 ? (
+          <div className='flex justify-center'>
+            <PieChart
+              withTooltip
+              tooltipDataSource="segment"
+              labelsPosition="inside"
+              labelsType="value"
+              withLabels
+              strokeWidth={1}
+              size={260}
+              data={dataForPieChart}
+            />
+          </div>
+        ) : (
+          <div className='flex justify-center min-h-48'>
+            <Text className='font-semibold text-lg text-center'>Нет данных</Text>
+          </div >
+        )}
 
         <div className='flex gap-2 mt-3'>
           <Button
@@ -206,7 +224,7 @@ function BalancePage() {
         >
           Долг
         </Button>
-      </div>
+      </div >
     </>
   )
 }

@@ -31,11 +31,18 @@ export type Transaction = {
   comment: string | null;
   isIncome: boolean;
   amount: number;
-  date: string;
+  date: Date;
   categoryId: string;
   createdAt: string;
   updatedAt: string;
   userId: string;
+};
+
+export type TransactionByCategory = {
+  id: string;
+  name: string;
+  value: number;
+  color: string;
 };
 
 export type Debt = {
@@ -45,7 +52,7 @@ export type Debt = {
   amount: number;
   name: string;
   comment: string | null;
-  date: string;
+  date: Date;
   createdAt: string;
   updatedAt: string;
   userId: string;

@@ -1,8 +1,8 @@
-import { Text } from "@mantine/core"
-import { modals } from "@mantine/modals"
-import { IconSquareRoundedCheck, IconSquareRoundedX } from "@tabler/icons-react"
+import { Button, Popover, Text } from "@mantine/core"
+import { modals, openContextModal } from "@mantine/modals"
+import { IconDots, IconPencil, IconSquareRoundedCheck, IconSquareRoundedX, IconTrash } from "@tabler/icons-react"
 import dayjs from "dayjs"
-import { useUpdateDebt } from "~/services/debts"
+import { useDeleteDebt, useUpdateDebt } from "~/services/debts"
 import { Debt } from "~/types/types"
 import { cn } from "~/utils/cn"
 
@@ -16,10 +16,16 @@ const DebtCard = ({ item }: Props) => {
 
 
     const [updatedebt] = useUpdateDebt();
+    const [deleteDebt] = useDeleteDebt();
 
     const handleUpdateDebtActive = (currentActive: boolean, id: string) => {
         updatedebt({ id, data: { active: !currentActive } });
     };;
+
+
+    const handleDeleteDebt = (id: string) => {
+        deleteDebt(id);
+    }
 
     const openConfirmModal = (currentActive: boolean, id: string) =>
         modals.openConfirmModal({
@@ -31,14 +37,72 @@ const DebtCard = ({ item }: Props) => {
         });
 
 
+
+    const handleUpdateDebt = (item: Debt) => {
+        openContextModal({
+            modal: 'updateDebtModal',
+            title: 'Редактировать долг',
+            innerProps: {
+                id: item.id,
+                amount: item.amount,
+                comment: item.comment ?? '',
+                date: item.date,
+                name: item.name,
+                isMyDebt: item.isMyDebt,
+                active: item.active,
+            },
+            size: 'xl',
+        });
+    }
+
+    const openDeleteModal = (id: string) => modals.openConfirmModal({
+        title: 'Вы уверены что хотите удалить этот долг?',
+        labels: { confirm: 'Да', cancel: 'Отмена' },
+        confirmProps: { color: 'red' },
+        cancelProps: { color: '' },
+        onConfirm: () => handleDeleteDebt(id),
+    });
+
     if (!item) return 'Нет данных!'
 
     return (
-        <div className='flex justify-between bg-[#2B244C] bg-opacity-80 p-2 rounded-md mb-1'>
+        <div className='flex justify-between items-center gap-1 bg-[#2B244C] bg-opacity-80 p-2 rounded-md mb-1'>
             <div key={item.id} className='w-full'>
                 <div className="flex justify-between items-center">
                     <Text size="sm" className="text-gray-500">{item.isMyDebt ? 'Мой долг' : 'Долг мне'}</Text>
-                    <Text size='sm' className="text-gray-500">{dayjs(item.date).format('DD.MM.YY')}</Text>
+                    <Popover
+                        width={40}
+                        offset={0}
+                        position="bottom"
+                        withArrow shadow="md"
+                        zIndex={0}
+                    >
+                        <Popover.Target>
+                            <IconDots size={28} color="gray" />
+                        </Popover.Target>
+                        <Popover.Dropdown
+                            className="flex flex-col justify-center items-center gap-2"
+                        >
+                            <Button
+                                variant="outline"
+                                p={0}
+                                w={28}
+                                h={28}
+                                onClick={() => handleUpdateDebt(item)}
+                            >
+                                <IconPencil size={16} />
+                            </Button>
+                            <Button
+                                variant="outline"
+                                p={0}
+                                w={28}
+                                h={28}
+                                onClick={() => openDeleteModal(item.id)}
+                            >
+                                <IconTrash size={16} color="red" />
+                            </Button>
+                        </Popover.Dropdown>
+                    </Popover>
                 </div>
                 <div className='flex justify-between items-center'>
                     <div className="flex items-center gap-1">
@@ -47,7 +111,7 @@ const DebtCard = ({ item }: Props) => {
                             <Text className="text-sm text-gray-300 italic">{`(${item.comment})`}</Text>
                         )}
                     </div>
-                    <Text size='sm' className="text-gray-500">{dayjs(item.date).format('HH:mm')}</Text>
+                    <Text size='sm' className="text-gray-500">{dayjs(item.date).format('DD.MM.YY')}</Text>
                 </div>
                 <div className='flex justify-between items-end'>
                     <Text
