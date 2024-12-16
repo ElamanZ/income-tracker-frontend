@@ -6,9 +6,10 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "dev": "vite --port=4001",
-    "build": "vite build",
+    "build": "vite build --mode production",
     "serve": "vite preview",
-    "start": "vite"
+    "start": "vite",
+    "deploy": "pnpm run build && firebase deploy --only hosting"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.61.6",
