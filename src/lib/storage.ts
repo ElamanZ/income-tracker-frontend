@@ -8,7 +8,7 @@ export type MyStorage = {
 }
 
 export const storage = new Storage<MyStorage>({
-    prefix: `batele-vendor-v${import.meta.env.APP_VERSION}:`,
+    prefix: `income-tracker-v${import.meta.env.APP_VERSION}:`,
     jsonSerializer: superjson,
 });
 

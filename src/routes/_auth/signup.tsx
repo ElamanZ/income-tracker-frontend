@@ -7,7 +7,7 @@ import { useSignUp } from '~/services/signUp'
 function SignUp() {
   const [signUp] = useSignUp()
   return (
-    <div className="reg h-screen flex items-center justify-center">
+    <div className="bg-custom-gradient h-screen flex items-center justify-center">
       <SignUpForm onSubmit={signUp} />
     </div>
   )

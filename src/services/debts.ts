@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { z } from "zod";
+import { dateString } from "~/schemes/dateString.schema";
 import { Debt } from "~/types/types";
 import { baseAxios } from "~/utils/baseAxios";
 
@@ -11,6 +12,7 @@ export const createDebtSchema = z.object({
     amount: z.number().min(1, 'Это поле обязательное'),
     name: z.string().min(1, 'Это поле обязательное'),
     comment: z.string().optional(),
+    date: dateString
 })
 
 export const updateDebtSchema = createDebtSchema.partial();
@@ -19,9 +21,13 @@ export type CreateDebtArg = z.infer<typeof createDebtSchema>;
 export type UpdateDebt = z.infer<typeof updateDebtSchema>;
 
 export type DebtFilterArg = {
-    isMyDebt?: boolean;
-    active?: boolean;
+    isMyDebt?: 'all' | 'true' | 'false';
+    active?: 'all' | 'true' | 'false';
     name?: string;
+    date?: Date;
+    fromDate?: Date | null;
+    toDate?: Date | null;
+    search?: string;
 }
 
 export type UpdateDebtArg = {
@@ -61,6 +67,7 @@ export const useCreateDebt = () => {
         mutationFn: createDebt,
         onSuccess: () => {
             void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'debt' });
+            void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'me' });
             toast.success('Долг успешно создан');
         }
     });
@@ -89,6 +96,7 @@ export const useUpdateDebt = () => {
         mutationFn: updateDebt,
         onSuccess: (data) => {
             void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'debt' });
+            void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'me' });
             queryClient.setQueryData(['debt', data.id], data)
             toast.success('Долг успешно обновлен');
         }
@@ -102,6 +110,7 @@ export const useDeleteDebt = () => {
         mutationFn: deleteDebt,
         onSuccess: () => {
             void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'debt' });
+            void queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === 'me' });
             toast.success('Долг успешно удален');
         }
     });

@@ -11,16 +11,23 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as AuthImport } from './routes/_auth'
 import { Route as AppImport } from './routes/_app'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthSignupImport } from './routes/_auth/signup'
 import { Route as AuthSigninImport } from './routes/_auth/signin'
 import { Route as AppTransactionsIndexImport } from './routes/_app/transactions/index'
 import { Route as AppSettingsIndexImport } from './routes/_app/settings/index'
+import { Route as AppDebtsIndexImport } from './routes/_app/debts/index'
 import { Route as AppCategoriesIndexImport } from './routes/_app/categories/index'
 import { Route as AppBalanceIndexImport } from './routes/_app/balance/index'
 
 // Create/Update Routes
+
+const AuthRoute = AuthImport.update({
+  id: '/_auth',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AppRoute = AppImport.update({
   id: '/_app',
@@ -34,15 +41,15 @@ const IndexRoute = IndexImport.update({
 } as any)
 
 const AuthSignupRoute = AuthSignupImport.update({
-  id: '/_auth/signup',
+  id: '/signup',
   path: '/signup',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => AuthRoute,
 } as any)
 
 const AuthSigninRoute = AuthSigninImport.update({
-  id: '/_auth/signin',
+  id: '/signin',
   path: '/signin',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => AuthRoute,
 } as any)
 
 const AppTransactionsIndexRoute = AppTransactionsIndexImport.update({
@@ -54,6 +61,12 @@ const AppTransactionsIndexRoute = AppTransactionsIndexImport.update({
 const AppSettingsIndexRoute = AppSettingsIndexImport.update({
   id: '/settings/',
   path: '/settings/',
+  getParentRoute: () => AppRoute,
+} as any)
+
+const AppDebtsIndexRoute = AppDebtsIndexImport.update({
+  id: '/debts/',
+  path: '/debts/',
   getParentRoute: () => AppRoute,
 } as any)
 
@@ -87,19 +100,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppImport
       parentRoute: typeof rootRoute
     }
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthImport
+      parentRoute: typeof rootRoute
+    }
     '/_auth/signin': {
       id: '/_auth/signin'
       path: '/signin'
       fullPath: '/signin'
       preLoaderRoute: typeof AuthSigninImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AuthImport
     }
     '/_auth/signup': {
       id: '/_auth/signup'
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof AuthSignupImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AuthImport
     }
     '/_app/balance/': {
       id: '/_app/balance/'
@@ -113,6 +133,13 @@ declare module '@tanstack/react-router' {
       path: '/categories'
       fullPath: '/categories'
       preLoaderRoute: typeof AppCategoriesIndexImport
+      parentRoute: typeof AppImport
+    }
+    '/_app/debts/': {
+      id: '/_app/debts/'
+      path: '/debts'
+      fullPath: '/debts'
+      preLoaderRoute: typeof AppDebtsIndexImport
       parentRoute: typeof AppImport
     }
     '/_app/settings/': {
@@ -137,6 +164,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppBalanceIndexRoute: typeof AppBalanceIndexRoute
   AppCategoriesIndexRoute: typeof AppCategoriesIndexRoute
+  AppDebtsIndexRoute: typeof AppDebtsIndexRoute
   AppSettingsIndexRoute: typeof AppSettingsIndexRoute
   AppTransactionsIndexRoute: typeof AppTransactionsIndexRoute
 }
@@ -144,30 +172,45 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppBalanceIndexRoute: AppBalanceIndexRoute,
   AppCategoriesIndexRoute: AppCategoriesIndexRoute,
+  AppDebtsIndexRoute: AppDebtsIndexRoute,
   AppSettingsIndexRoute: AppSettingsIndexRoute,
   AppTransactionsIndexRoute: AppTransactionsIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
+interface AuthRouteChildren {
+  AuthSigninRoute: typeof AuthSigninRoute
+  AuthSignupRoute: typeof AuthSignupRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthSigninRoute: AuthSigninRoute,
+  AuthSignupRoute: AuthSignupRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '': typeof AppRouteWithChildren
+  '': typeof AuthRouteWithChildren
   '/signin': typeof AuthSigninRoute
   '/signup': typeof AuthSignupRoute
   '/balance': typeof AppBalanceIndexRoute
   '/categories': typeof AppCategoriesIndexRoute
+  '/debts': typeof AppDebtsIndexRoute
   '/settings': typeof AppSettingsIndexRoute
   '/transactions': typeof AppTransactionsIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '': typeof AppRouteWithChildren
+  '': typeof AuthRouteWithChildren
   '/signin': typeof AuthSigninRoute
   '/signup': typeof AuthSignupRoute
   '/balance': typeof AppBalanceIndexRoute
   '/categories': typeof AppCategoriesIndexRoute
+  '/debts': typeof AppDebtsIndexRoute
   '/settings': typeof AppSettingsIndexRoute
   '/transactions': typeof AppTransactionsIndexRoute
 }
@@ -176,10 +219,12 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
+  '/_auth': typeof AuthRouteWithChildren
   '/_auth/signin': typeof AuthSigninRoute
   '/_auth/signup': typeof AuthSignupRoute
   '/_app/balance/': typeof AppBalanceIndexRoute
   '/_app/categories/': typeof AppCategoriesIndexRoute
+  '/_app/debts/': typeof AppDebtsIndexRoute
   '/_app/settings/': typeof AppSettingsIndexRoute
   '/_app/transactions/': typeof AppTransactionsIndexRoute
 }
@@ -193,6 +238,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/balance'
     | '/categories'
+    | '/debts'
     | '/settings'
     | '/transactions'
   fileRoutesByTo: FileRoutesByTo
@@ -203,16 +249,19 @@ export interface FileRouteTypes {
     | '/signup'
     | '/balance'
     | '/categories'
+    | '/debts'
     | '/settings'
     | '/transactions'
   id:
     | '__root__'
     | '/'
     | '/_app'
+    | '/_auth'
     | '/_auth/signin'
     | '/_auth/signup'
     | '/_app/balance/'
     | '/_app/categories/'
+    | '/_app/debts/'
     | '/_app/settings/'
     | '/_app/transactions/'
   fileRoutesById: FileRoutesById
@@ -221,15 +270,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
-  AuthSigninRoute: typeof AuthSigninRoute
-  AuthSignupRoute: typeof AuthSignupRoute
+  AuthRoute: typeof AuthRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
-  AuthSigninRoute: AuthSigninRoute,
-  AuthSignupRoute: AuthSignupRoute,
+  AuthRoute: AuthRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -244,8 +291,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/_app",
-        "/_auth/signin",
-        "/_auth/signup"
+        "/_auth"
       ]
     },
     "/": {
@@ -256,15 +302,25 @@ export const routeTree = rootRoute
       "children": [
         "/_app/balance/",
         "/_app/categories/",
+        "/_app/debts/",
         "/_app/settings/",
         "/_app/transactions/"
       ]
     },
+    "/_auth": {
+      "filePath": "_auth.tsx",
+      "children": [
+        "/_auth/signin",
+        "/_auth/signup"
+      ]
+    },
     "/_auth/signin": {
-      "filePath": "_auth/signin.tsx"
+      "filePath": "_auth/signin.tsx",
+      "parent": "/_auth"
     },
     "/_auth/signup": {
-      "filePath": "_auth/signup.tsx"
+      "filePath": "_auth/signup.tsx",
+      "parent": "/_auth"
     },
     "/_app/balance/": {
       "filePath": "_app/balance/index.tsx",
@@ -272,6 +328,10 @@ export const routeTree = rootRoute
     },
     "/_app/categories/": {
       "filePath": "_app/categories/index.tsx",
+      "parent": "/_app"
+    },
+    "/_app/debts/": {
+      "filePath": "_app/debts/index.tsx",
       "parent": "/_app"
     },
     "/_app/settings/": {

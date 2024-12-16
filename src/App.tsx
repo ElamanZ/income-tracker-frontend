@@ -9,6 +9,8 @@ import { useGetMe } from './services/getMe';
 import { router } from './router';
 import { queryClient } from './utils/queryClient';
 import { theme } from './theme';
+import { ModalsProvider } from '@mantine/modals';
+import { modals } from './components/ContextModals/contextModals';
 
 function Router() {
   const [me] = useGetMe();
@@ -26,8 +28,10 @@ function App() {
     <>
       <QueryClientProvider client={queryClient}>
         <DatesProvider settings={{ locale: 'ru' }}>
-          <MantineProvider theme={theme}>
-            <Router />
+          <MantineProvider defaultColorScheme="auto" theme={theme}>
+            <ModalsProvider modals={modals}>
+              <Router />
+            </ModalsProvider>
           </MantineProvider>
         </DatesProvider>
       </QueryClientProvider>
