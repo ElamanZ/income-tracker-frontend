@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
       - name: pnpm-setup
         uses: pnpm/action-setup@v2
-      - run: pnpm ci && pnpm run build
+      - run: pnpm i --frozen-lockfile && pnpm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
