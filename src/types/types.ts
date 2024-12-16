@@ -1,3 +1,5 @@
+import { DocumentReference, Timestamp } from "firebase/firestore";
+import { z } from "zod";
 
 
 export type ProfileEntity = {
@@ -25,6 +27,21 @@ export type GroupedCategories = {
   income: Category[];
   expense: Category[];
 };
+
+
+export const TransactionsSchema = z.object({
+  id: z.string(),
+  amount: z.number(),
+  isIncome: z.boolean(),
+  comment: z.string().nullable(),
+  date: z.instanceof(Timestamp),
+  categoryId: z.any().transform((val) => val ? val as DocumentReference : null),
+  createdAt: z.instanceof(Timestamp),
+  updatedAt: z.instanceof(Timestamp),
+  userId: z.string(),
+});
+
+export type TransactionsSchema = z.infer<typeof TransactionsSchema>;
 
 export type Transaction = {
   id: string;

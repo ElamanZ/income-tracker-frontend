@@ -1,8 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { collection, getDocs } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { z } from "zod";
+import { firestore } from "~/firebase";
 import { dateString } from "~/schemes/dateString.schema";
-import { Transaction, TransactionByCategory } from "~/types/types";
+import { Transaction, TransactionByCategory, TransactionsSchema } from "~/types/types";
 import { baseAxios } from "~/utils/baseAxios";
 
 
@@ -93,6 +95,26 @@ export const useCreateTransaction = () => {
         }
     });
     return [mutation.mutate, mutation] as const
+}
+
+export const fetchTransactionsV2 = async ({ }: TransactionFilterArg = {}) => {
+    const transactionsCollection = collection(firestore, 'transactions');
+
+    const snapshot = await getDocs(transactionsCollection);
+    const data = snapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+            id: doc.id,
+            ...data,
+        };
+    });
+    console.log(data)
+    const parsedData = TransactionsSchema.array().safeParse(data);
+    if (parsedData.error) {
+        console.log(parsedData.error);
+        throw parsedData.error;
+    }
+    return parsedData.success ? parsedData.data : [];
 }
 
 export const useFetchTransactions = (arg: TransactionFilterArg = {}) => {

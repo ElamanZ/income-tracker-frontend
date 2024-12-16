@@ -28,7 +28,7 @@ function TransactionsPage() {
 
     const [categories] = useFetchCategories()
 
-    const [transactions, { isLoading }] = useFetchTransactions({
+    const [transactions, { isLoading, error }] = useFetchTransactions({
         categoryId: search.categoryId ?? '',
         fromDate: search.fromDate ?? dayjs().startOf('month').toDate(),
         toDate: search.toDate ?? dayjs().endOf('month').toDate(),
@@ -46,12 +46,19 @@ function TransactionsPage() {
         });
     }, [dates, navigate]);
 
+    if (error) {
+        return <div className='flex justify-center w-full items-center h-screen'>
+            <Text c="red">Ошибка при загрузке данных: {error.message}</Text>
+        </div>
+    }
 
-    if (isLoading) return (
-        <div className='flex justify-center w-full items-center h-screen'>
+    if (isLoading) {
+        return <div className='flex justify-center w-full items-center h-screen'>
             <Loader />
         </div>
-    )
+    }
+
+
 
     return (
         <>
