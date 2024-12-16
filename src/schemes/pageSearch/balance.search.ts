@@ -8,4 +8,5 @@ export const balancePageFiltersSchema = z.object({
   toDate: z.string().or(z.date())
     .transform(val => !val ? null : val instanceof Date ? val : new Date(val))
     .pipe(z.date().nullish()).nullish(),
+  isIncome: z.enum(['all', 'false', 'true']).default('all'),
 })

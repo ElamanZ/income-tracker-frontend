@@ -20,7 +20,7 @@ export type CreateTransactionArg = z.infer<typeof createTransactionSchema>;
 export type UpdateTransaction = z.infer<typeof updateTransactionSchema>;
 
 export type TransactionFilterArg = {
-    isIncome?: boolean;
+    isIncome?: 'all' | 'true' | 'false';
     categoryId?: string;
     date?: Date;
     fromDate?: Date | null;

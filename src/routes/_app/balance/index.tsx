@@ -13,6 +13,7 @@ import '~/index.css'
 import { useFetchCategories } from '~/services/category';
 import { openContextModal } from '@mantine/modals';
 import { useFetchExpensesTransactions, useFetchIncomesTransactions, useFetchTransactionByCategory } from '~/services/transactions';
+import { transactionsFilterIsIncome } from '~/types/enums';
 
 // export const dataForPieChart = [
 //   { name: 'Такси', value: 1236, color: '#fa5252' },
@@ -35,12 +36,16 @@ function BalancePage() {
     search.toDate ?? dayjs().endOf("month").toDate(),
   ]);
 
+  const [isIncome, setIsIncome] = useState(search.isIncome ?? 'all');
+
+
   const [me] = useGetMe()
   const [categories] = useFetchCategories()
   const [dataForPieChart] = useFetchTransactionByCategory({
     categoryId: search.categoryId ?? '',
     fromDate: search.fromDate ?? null,
     toDate: search.toDate ?? null,
+    isIncome: search.isIncome ?? 'all',
   })
 
   const [expense, { isLoading }] = useFetchExpensesTransactions({
@@ -65,9 +70,11 @@ function BalancePage() {
         ...prev,
         fromDate: dates[0] ?? null,
         toDate: dates[1] ?? null,
+        isIncome: isIncome,
+
       }),
     });
-  }, [dates, navigate]);
+  }, [dates, navigate, isIncome]);
 
 
   const handleCreateTransaction = (isIncome: boolean) => {
@@ -152,10 +159,6 @@ function BalancePage() {
             onChange={(value) => setDates(value)}
           />
         </div>
-
-
-
-
         <div>
           {isLoading ? (
             <div className='w-full flex justify-center items-center'>
@@ -174,6 +177,20 @@ function BalancePage() {
           )}
         </div>
 
+        <div className='w-full flex justify-end'>
+          <Select
+            w={isMobile ? 100 : 200}
+            variant="default"
+            color="#1B1B3C"
+            size={isMobile ? "xs" : "md"}
+            defaultValue={isIncome}
+            radius="md"
+            value={isIncome}
+            onChange={(val) => setIsIncome(val as 'all' | 'true' | 'false')}
+            data={transactionsFilterIsIncome}
+          />
+        </div>
+
         {dataForPieChart.length !== 0 ? (
           <div className='flex justify-center'>
             <PieChart
@@ -181,10 +198,13 @@ function BalancePage() {
               tooltipDataSource="segment"
               labelsPosition="inside"
               labelsType="value"
-              withLabels
               strokeWidth={1}
               size={260}
+              withLabels
               data={dataForPieChart}
+              strokeColor='white'
+              labelColor='white'
+              className='text-white'
             />
           </div>
         ) : (

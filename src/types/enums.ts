@@ -45,6 +45,20 @@ export const debtsFilterActive: ComboboxData = [
         label: "Неактивные",
     },
 ];
+export const transactionsFilterIsIncome: ComboboxData = [
+    {
+        value: "all",
+        label: "Все",
+    },
+    {
+        value: "true",
+        label: "Доходы",
+    },
+    {
+        value: "false",
+        label: "Расходы",
+    },
+];
 
 export const debtsFilterIsMyDebt: ComboboxData = [
     {
