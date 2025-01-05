@@ -67,13 +67,23 @@ function CategoriesPage() {
                 )}
             </div>
 
-            <div className={cn('flex flex-col gap-3 justify-between h-screen', { 'h-[calc(100vh-100px)]': isMobile })}>
+            <div className={cn('flex flex-col gap-3 h-screen', { 'h-[calc(100vh-100px)]': isMobile })}>
 
-                <div className='flex flex-col gap-4'>
+                <Button
+                    radius='md'
+                    size='md'
+                    className='min-h-10'
+                    fullWidth
+                    onClick={handleCreateCategory}
+                >
+                    Добавить категорию
+                </Button>
+
+                <div className='flex flex-col gap-4 overflow-y-auto mt-3'>
 
                     <div>
-                        <div className='bg-[#30D8B1] h-10 flex justify-center items-center w-full mb-2 rounded-md text-[#2D2437]'>
-                            <Text className='text-center text-lg font-semibold'>Категории дохода</Text>
+                        <div className='border h-7 flex justify-center items-center w-full mb-2 rounded-md text-[#2D2437]'>
+                            <Text className='text-center text-md font-semibold text-[#30D8B1]'>Категории дохода</Text>
                         </div>
 
                         {groupedCategories.income.length === 0 && (
@@ -105,8 +115,8 @@ function CategoriesPage() {
                     </div>
 
                     <div>
-                        <div className='bg-[#EC4887] h-10 flex justify-center items-center w-full mb-2 rounded-md text-[#2D2437]'>
-                            <Text className='text-center text-lg font-semibold'>Категории расхода</Text>
+                        <div className='border h-7 flex justify-center items-center w-full mb-2 rounded-md text-[#2D2437]'>
+                            <Text className='text-center text-md font-semibold text-[#EC4887]'>Категории расхода</Text>
                         </div>
 
                         {groupedCategories.expense.length === 0 && (
@@ -138,13 +148,7 @@ function CategoriesPage() {
                 </div>
 
 
-                <Button
-                    radius='md'
-                    fullWidth
-                    onClick={handleCreateCategory}
-                >
-                    Добавить категорию
-                </Button>
+
 
 
                 {/* <Modal

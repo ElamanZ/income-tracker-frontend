@@ -196,10 +196,11 @@ function BalancePage() {
             <PieChart
               withTooltip
               tooltipDataSource="segment"
-              labelsPosition="inside"
+              labelsPosition="outside"
               labelsType="value"
               strokeWidth={1}
-              size={260}
+              size={175}
+              w='100%'
               withLabels
               data={dataForPieChart}
               strokeColor='white'

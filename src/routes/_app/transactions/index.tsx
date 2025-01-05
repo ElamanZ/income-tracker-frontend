@@ -32,6 +32,7 @@ function TransactionsPage() {
         categoryId: search.categoryId ?? '',
         fromDate: search.fromDate ?? dayjs().startOf('month').toDate(),
         toDate: search.toDate ?? dayjs().endOf('month').toDate(),
+        isIncome: 'all'
     })
 
 
