@@ -69,7 +69,7 @@ function DebtsPage() {
                 )}
             </div>
 
-            <div className='flex flex-col gap-2 mb-2'>
+            <div className='flex flex-col gap-2 mb-2 p-3'>
 
                 <div className='flex justify-between gap-2'>
                     <DatePickerInput
@@ -129,7 +129,7 @@ function DebtsPage() {
 
             </div>
 
-            <div>
+            <div className='p-3'>
                 {isLoading ? (
                     <div className='w-full flex justify-center items-center'>
                         <Loader />

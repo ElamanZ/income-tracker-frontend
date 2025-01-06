@@ -1,4 +1,4 @@
-import { Accordion, Button, Loader, Select, Text } from '@mantine/core'
+import { Button, Loader, Select, Text } from '@mantine/core'
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { balancePageFiltersSchema } from '~/schemes/pageSearch/balance.search'
 import { PieChart } from '@mantine/charts';
@@ -14,7 +14,6 @@ import { useFetchCategories } from '~/services/category';
 import { openContextModal } from '@mantine/modals';
 import { useFetchExpensesTransactions, useFetchIncomesTransactions, useFetchTransactionByCategory } from '~/services/transactions';
 import { transactionsFilterIsIncome } from '~/types/enums';
-import { cn } from '~/utils/cn';
 
 // export const dataForPieChart = [
 //   { name: 'Такси', value: 1236, color: '#fa5252' },
@@ -38,7 +37,7 @@ function BalancePage() {
   ]);
 
   const [isIncome, setIsIncome] = useState(search.isIncome ?? 'false');
-  const [openedAccardion, setOpenedAccardion] = useState<string | null>(null);
+  // const [openedAccardion, setOpenedAccardion] = useState<string | null>(null);
 
 
   const [me] = useGetMe()
@@ -112,8 +111,8 @@ function BalancePage() {
         )}
       </div>
 
-      {/* <div className='flex flex-col justify-between h-screen'> */}
-      <div
+      <div className='flex flex-col gap-3 p-3'>
+        {/* <div
         className={cn(
           "flex flex-col justify-between",
           {
@@ -122,11 +121,11 @@ function BalancePage() {
             'h-screen': !isMobile && !openedAccardion,
           }
         )}
-      >
+      > */}
         <div className='flex flex-col gap-3'>
           <div className='w-full bg-custom-bg-dark border border-white bg-opacity-65 flex flex-col gap-2 text-center rounded-xl p-2 '>
-            <Text className='font-semibold text-2xl'>Баланс: {me?.profile.balance} сом</Text>
-            <Text className='text-center text-lg text-[#B2B2B7]'>Период: {dayjs(search.fromDate).format('DD.MM.YY')} - {dayjs(search.toDate).format('DD.MM.YY')}</Text>
+            <Text className='font-semibold text-lg'>Баланс: {me?.profile.balance} сом</Text>
+            <Text className='text-center text-md text-[#B2B2B7]'>Период: {dayjs(search.fromDate).format('DD.MM.YY')} - {dayjs(search.toDate).format('DD.MM.YY')}</Text>
           </div>
 
           <div className='flex justify-between gap-2'>
@@ -185,7 +184,7 @@ function BalancePage() {
             )}
           </div>
 
-          <Accordion value={openedAccardion} onChange={setOpenedAccardion}>
+          {/* <Accordion value={openedAccardion} onChange={setOpenedAccardion}>
             <Accordion.Item value='Фильтрация'>
               <Accordion.Control>
                 <Text size="sm">
@@ -232,11 +231,11 @@ function BalancePage() {
                 </div>
               </Accordion.Panel>
             </Accordion.Item>
-          </Accordion>
+          </Accordion> */}
 
         </div>
 
-        {/* <div>
+        <div>
           <div className='w-full flex justify-end'>
             <Select
               w={isMobile ? 100 : 200}
@@ -272,43 +271,42 @@ function BalancePage() {
               <Text className='font-semibold text-lg text-center'>Нет данных</Text>
             </div >
           )}
-        </div> */}
+        </div>
+      </div>
 
-
-        <div className='flex flex-col justify-end gap-2'>
-          <div className='flex gap-2 mt-3'>
-            <Button
-              color="#30D8B1"
-              radius="md"
-              fullWidth
-              size="md"
-              onClick={() => handleCreateTransaction(true)}
-            >
-              Доход +
-            </Button>
-
-            <Button
-              color="#EC4887"
-              radius="md"
-              fullWidth
-              size="md"
-              onClick={() => handleCreateTransaction(false)}
-            >
-              Расход -
-            </Button>
-          </div>
-
+      <div className='flex flex-col justify-end gap-2 sticky z-10 bottom-0 left-0 right-0 p-3 bg-custom-gradient'>
+        <div className='flex gap-2'>
           <Button
-            color="#5D30D8"
+            color="#30D8B1"
             radius="md"
             fullWidth
-            size="md"
-            onClick={handleCreateDebt}
+            size="sm"
+            onClick={() => handleCreateTransaction(true)}
           >
-            Долг
+            Доход +
           </Button>
-        </div >
-      </div>
+
+          <Button
+            color="#EC4887"
+            radius="md"
+            fullWidth
+            size="sm"
+            onClick={() => handleCreateTransaction(false)}
+          >
+            Расход -
+          </Button>
+        </div>
+
+        <Button
+          color="#5D30D8"
+          radius="md"
+          fullWidth
+          size="sm"
+          onClick={handleCreateDebt}
+        >
+          Долг
+        </Button>
+      </div >
     </>
   )
 }

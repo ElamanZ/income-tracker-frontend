@@ -67,7 +67,7 @@ const Layout = ({ children }: Props) => {
         <SideBar close={close} />
       </AppShell.Navbar>
 
-      <AppShell.Main>
+      <AppShell.Main px={0} pb={0}>
         <main>
           {children}
         </main>

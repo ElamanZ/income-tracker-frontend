@@ -67,12 +67,11 @@ function CategoriesPage() {
                 )}
             </div>
 
-            <div className={cn('flex flex-col gap-3 h-screen', { 'h-[calc(100vh-100px)]': isMobile })}>
+            <div className={cn('flex flex-col gap-3 h-screen p-3', { 'h-[calc(100vh-100px)]': isMobile })}>
 
                 <Button
                     radius='md'
-                    size='md'
-                    className='min-h-10'
+                    size='sm'
                     fullWidth
                     onClick={handleCreateCategory}
                 >
