@@ -1,4 +1,4 @@
-import { Button, Loader, Select, Text } from '@mantine/core'
+import { Accordion, Button, Loader, Select, Text } from '@mantine/core'
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { balancePageFiltersSchema } from '~/schemes/pageSearch/balance.search'
 import { PieChart } from '@mantine/charts';
@@ -14,6 +14,7 @@ import { useFetchCategories } from '~/services/category';
 import { openContextModal } from '@mantine/modals';
 import { useFetchExpensesTransactions, useFetchIncomesTransactions, useFetchTransactionByCategory } from '~/services/transactions';
 import { transactionsFilterIsIncome } from '~/types/enums';
+import { cn } from '~/utils/cn';
 
 // export const dataForPieChart = [
 //   { name: 'Такси', value: 1236, color: '#fa5252' },
@@ -36,7 +37,8 @@ function BalancePage() {
     search.toDate ?? dayjs().endOf("month").toDate(),
   ]);
 
-  const [isIncome, setIsIncome] = useState(search.isIncome ?? 'all');
+  const [isIncome, setIsIncome] = useState(search.isIncome ?? 'false');
+  const [openedAccardion, setOpenedAccardion] = useState<string | null>(null);
 
 
   const [me] = useGetMe()
@@ -45,7 +47,7 @@ function BalancePage() {
     categoryId: search.categoryId ?? '',
     fromDate: search.fromDate ?? null,
     toDate: search.toDate ?? null,
-    isIncome: search.isIncome ?? 'all',
+    isIncome: search.isIncome ?? 'false',
   })
 
   const [expense, { isLoading }] = useFetchExpensesTransactions({
@@ -110,137 +112,203 @@ function BalancePage() {
         )}
       </div>
 
-      <div className='flex flex-col gap-3'>
+      {/* <div className='flex flex-col justify-between h-screen'> */}
+      <div
+        className={cn(
+          "flex flex-col justify-between",
+          {
+            'h-[calc(100vh-100px)]': isMobile && !openedAccardion,
+            'min-h-screen': openedAccardion,
+            'h-screen': !isMobile && !openedAccardion,
+          }
+        )}
+      >
+        <div className='flex flex-col gap-3'>
+          <div className='w-full bg-custom-bg-dark border border-white bg-opacity-65 flex flex-col gap-2 text-center rounded-xl p-2 '>
+            <Text className='font-semibold text-2xl'>Баланс: {me?.profile.balance} сом</Text>
+            <Text className='text-center text-lg text-[#B2B2B7]'>Период: {dayjs(search.fromDate).format('DD.MM.YY')} - {dayjs(search.toDate).format('DD.MM.YY')}</Text>
+          </div>
 
-        <div className='w-full bg-custom-bg-dark border border-white bg-opacity-65 flex flex-col gap-2 text-center rounded-xl p-2 '>
-          <Text className='font-semibold text-2xl'>Баланс: {me?.profile.balance} сом</Text>
-          <Text className='text-center text-lg text-[#B2B2B7]'>Период: {dayjs(search.fromDate).format('DD.MM.YY')} - {dayjs(search.toDate).format('DD.MM.YY')}</Text>
-        </div>
+          <div className='flex justify-between gap-2'>
+            <Select
+              w={isMobile ? 150 : 200}
+              variant='default'
+              color='#1B1B3C'
+              size={isMobile ? 'xs' : 'md'}
+              radius='md'
+              placeholder="Категории"
+              data={categories.map((item) => ({
+                value: item.id,
+                label: item.name,
+              }))}
+              onChange={(value) => {
+                navigate({
+                  to: "/balance",
+                  search: (prev) => ({
+                    ...prev,
+                    categoryId: value || null,
+                  }),
+                })
+              }}
+              value={search.categoryId}
+              searchable
+              clearable
+            />
 
-        <div className='flex justify-between gap-2'>
-          <Select
-            w={isMobile ? 150 : 200}
-            variant='default'
-            color='#1B1B3C'
-            size={isMobile ? 'xs' : 'md'}
-            radius='md'
-            placeholder="Категории"
-            data={categories.map((item) => ({
-              value: item.id,
-              label: item.name,
-            }))}
-            onChange={(value) => {
-              navigate({
-                to: "/balance",
-                search: (prev) => ({
-                  ...prev,
-                  categoryId: value || null,
-                }),
-              })
-            }}
-            value={search.categoryId}
-            searchable
-            clearable
-          />
-
-          <DatePickerInput
-            w={isMobile ? 150 : 200}
-            type="range"
-            leftSection={<IconCalendar size={16} />}
-            size={isMobile ? 'xs' : 'md'}
-            radius='md'
-            value={dates}
-            valueFormat='DD.MM'
-            defaultValue={[today.toDate(), today.toDate()]}
-            onChange={(value) => setDates(value)}
-          />
-        </div>
-        <div>
-          {isLoading ? (
-            <div className='w-full flex justify-center items-center'>
-              <Loader />
-            </div>
-          ) : (
-            <Text className='font-semibold text-lg text-center'>Потрачено: {expense} сом</Text>
-          )}
-
-          {isLoadingIncomes ? (
-            <div className='w-full flex justify-center items-center'>
-              <Loader />
-            </div>
-          ) : (
-            <Text className='font-semibold text-lg text-center'>Заработано: {incomes} сом</Text>
-          )}
-        </div>
-
-        <div className='w-full flex justify-end'>
-          <Select
-            w={isMobile ? 100 : 200}
-            variant="default"
-            color="#1B1B3C"
-            size={isMobile ? "xs" : "md"}
-            defaultValue={isIncome}
-            radius="md"
-            value={isIncome}
-            onChange={(val) => setIsIncome(val as 'all' | 'true' | 'false')}
-            data={transactionsFilterIsIncome}
-          />
-        </div>
-
-        {dataForPieChart.length !== 0 ? (
-          <div className='flex justify-center'>
-            <PieChart
-              withTooltip
-              // tooltipDataSource="segment"
-              // labelsPosition="outside"
-              labelsType="value"
-              strokeWidth={1}
-              size={175}
-              w='100%'
-              withLabels
-              data={dataForPieChart}
-              strokeColor='white'
-              className='text-white'
+            <DatePickerInput
+              w={isMobile ? 150 : 200}
+              type="range"
+              leftSection={<IconCalendar size={16} />}
+              size={isMobile ? 'xs' : 'md'}
+              radius='md'
+              value={dates}
+              valueFormat='DD.MM'
+              defaultValue={[today.toDate(), today.toDate()]}
+              onChange={(value) => setDates(value)}
             />
           </div>
-        ) : (
-          <div className='flex justify-center min-h-48'>
-            <Text className='font-semibold text-lg text-center'>Нет данных</Text>
-          </div >
-        )}
+          <div>
+            {isLoading ? (
+              <div className='w-full flex justify-center items-center'>
+                <Loader />
+              </div>
+            ) : (
+              <Text className='font-semibold text-lg text-center'>Потрачено: {expense} сом</Text>
+            )}
 
-        <div className='flex gap-2 mt-3'>
-          <Button
-            color="#30D8B1"
-            radius="md"
-            fullWidth
-            size="md"
-            onClick={() => handleCreateTransaction(true)}
-          >
-            Доход +
-          </Button>
+            {isLoadingIncomes ? (
+              <div className='w-full flex justify-center items-center'>
+                <Loader />
+              </div>
+            ) : (
+              <Text className='font-semibold text-lg text-center'>Заработано: {incomes} сом</Text>
+            )}
+          </div>
 
-          <Button
-            color="#EC4887"
-            radius="md"
-            fullWidth
-            size="md"
-            onClick={() => handleCreateTransaction(false)}
-          >
-            Расход -
-          </Button>
+          <Accordion value={openedAccardion} onChange={setOpenedAccardion}>
+            <Accordion.Item value='Фильтрация'>
+              <Accordion.Control>
+                <Text size="sm">
+                  Аналитика
+                </Text>
+              </Accordion.Control>
+              <Accordion.Panel>
+                <div>
+                  <div className='w-full flex justify-end'>
+                    <Select
+                      w={isMobile ? 100 : 200}
+                      variant="default"
+                      color="#1B1B3C"
+                      size={isMobile ? "xs" : "md"}
+                      defaultValue={isIncome}
+                      radius="md"
+                      value={isIncome}
+                      onChange={(val) => setIsIncome(val as 'all' | 'true' | 'false')}
+                      data={transactionsFilterIsIncome}
+                    />
+                  </div>
+
+                  {dataForPieChart.length !== 0 ? (
+                    <div className='flex justify-center'>
+                      <PieChart
+                        withTooltip
+                        // tooltipDataSource="segment"
+                        // labelsPosition="outside"
+                        labelsType="value"
+                        strokeWidth={1}
+                        size={175}
+                        w='100%'
+                        withLabels
+                        data={dataForPieChart}
+                        strokeColor='white'
+                        className='text-white'
+                      />
+                    </div>
+                  ) : (
+                    <div className='flex justify-center min-h-48'>
+                      <Text className='font-semibold text-lg text-center'>Нет данных</Text>
+                    </div >
+                  )}
+                </div>
+              </Accordion.Panel>
+            </Accordion.Item>
+          </Accordion>
+
         </div>
 
-        <Button
-          color="#5D30D8"
-          radius="md"
-          fullWidth
-          size="md"
-          onClick={handleCreateDebt}
-        >
-          Долг
-        </Button>
-      </div >
+        {/* <div>
+          <div className='w-full flex justify-end'>
+            <Select
+              w={isMobile ? 100 : 200}
+              variant="default"
+              color="#1B1B3C"
+              size={isMobile ? "xs" : "md"}
+              defaultValue={isIncome}
+              radius="md"
+              value={isIncome}
+              onChange={(val) => setIsIncome(val as 'all' | 'true' | 'false')}
+              data={transactionsFilterIsIncome}
+            />
+          </div>
+
+          {dataForPieChart.length !== 0 ? (
+            <div className='flex justify-center'>
+              <PieChart
+                withTooltip
+                // tooltipDataSource="segment"
+                // labelsPosition="outside"
+                labelsType="value"
+                strokeWidth={1}
+                size={175}
+                w='100%'
+                withLabels
+                data={dataForPieChart}
+                strokeColor='white'
+                className='text-white'
+              />
+            </div>
+          ) : (
+            <div className='flex justify-center min-h-48'>
+              <Text className='font-semibold text-lg text-center'>Нет данных</Text>
+            </div >
+          )}
+        </div> */}
+
+
+        <div className='flex flex-col justify-end gap-2'>
+          <div className='flex gap-2 mt-3'>
+            <Button
+              color="#30D8B1"
+              radius="md"
+              fullWidth
+              size="md"
+              onClick={() => handleCreateTransaction(true)}
+            >
+              Доход +
+            </Button>
+
+            <Button
+              color="#EC4887"
+              radius="md"
+              fullWidth
+              size="md"
+              onClick={() => handleCreateTransaction(false)}
+            >
+              Расход -
+            </Button>
+          </div>
+
+          <Button
+            color="#5D30D8"
+            radius="md"
+            fullWidth
+            size="md"
+            onClick={handleCreateDebt}
+          >
+            Долг
+          </Button>
+        </div >
+      </div>
     </>
   )
 }
