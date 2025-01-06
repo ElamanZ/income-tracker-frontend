@@ -97,10 +97,6 @@ function BalancePage() {
     });
   }
 
-
-  console.log(dataForPieChart, 'dataForPieChart');
-
-
   return (
     <>
       <div>
@@ -195,8 +191,8 @@ function BalancePage() {
           <div className='flex justify-center'>
             <PieChart
               withTooltip
-              tooltipDataSource="segment"
-              labelsPosition="outside"
+              // tooltipDataSource="segment"
+              // labelsPosition="outside"
               labelsType="value"
               strokeWidth={1}
               size={175}
@@ -204,7 +200,6 @@ function BalancePage() {
               withLabels
               data={dataForPieChart}
               strokeColor='white'
-              labelColor='white'
               className='text-white'
             />
           </div>
