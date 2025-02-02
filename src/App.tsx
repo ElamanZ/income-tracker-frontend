@@ -35,7 +35,7 @@ function App() {
           </MantineProvider>
         </DatesProvider>
       </QueryClientProvider>
-      <ToastContainer />
+      <ToastContainer position='bottom-left' />
     </>
   );
 }
