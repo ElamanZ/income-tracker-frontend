@@ -15,13 +15,6 @@ import { openContextModal } from '@mantine/modals';
 import { useFetchExpensesTransactions, useFetchIncomesTransactions, useFetchTransactionByCategory } from '~/services/transactions';
 import { transactionsFilterIsIncome } from '~/types/enums';
 
-// export const dataForPieChart = [
-//   { name: 'Такси', value: 1236, color: '#fa5252' },
-//   { name: 'Еда', value: 5388, color: 'yellow.6' },
-//   { name: 'Транспорт', value: 982, color: 'teal.6' },
-//   { name: 'Домой', value: 3000, color: 'green.6' },
-//   { name: 'Тренирова', value: 3000, color: 'gray.6' },
-// ];
 
 function BalancePage() {
 
@@ -37,8 +30,6 @@ function BalancePage() {
   ]);
 
   const [isIncome, setIsIncome] = useState(search.isIncome ?? 'false');
-  // const [openedAccardion, setOpenedAccardion] = useState<string | null>(null);
-
 
   const [me] = useGetMe()
   const [categories] = useFetchCategories()
@@ -98,6 +89,7 @@ function BalancePage() {
     });
   }
 
+
   return (
     <>
       <div>
@@ -112,16 +104,7 @@ function BalancePage() {
       </div>
 
       <div className='flex flex-col gap-3 p-3'>
-        {/* <div
-        className={cn(
-          "flex flex-col justify-between",
-          {
-            'h-[calc(100vh-100px)]': isMobile && !openedAccardion,
-            'min-h-screen': openedAccardion,
-            'h-screen': !isMobile && !openedAccardion,
-          }
-        )}
-      > */}
+
         <div className='flex flex-col gap-3'>
           <div className='w-full bg-custom-bg-dark border border-white bg-opacity-65 flex flex-col gap-2 text-center rounded-xl p-2 '>
             <Text className='font-semibold text-lg'>Баланс: {me?.profile.balance} сом</Text>
@@ -184,55 +167,6 @@ function BalancePage() {
             )}
           </div>
 
-          {/* <Accordion value={openedAccardion} onChange={setOpenedAccardion}>
-            <Accordion.Item value='Фильтрация'>
-              <Accordion.Control>
-                <Text size="sm">
-                  Аналитика
-                </Text>
-              </Accordion.Control>
-              <Accordion.Panel>
-                <div>
-                  <div className='w-full flex justify-end'>
-                    <Select
-                      w={isMobile ? 100 : 200}
-                      variant="default"
-                      color="#1B1B3C"
-                      size={isMobile ? "xs" : "md"}
-                      defaultValue={isIncome}
-                      radius="md"
-                      value={isIncome}
-                      onChange={(val) => setIsIncome(val as 'all' | 'true' | 'false')}
-                      data={transactionsFilterIsIncome}
-                    />
-                  </div>
-
-                  {dataForPieChart.length !== 0 ? (
-                    <div className='flex justify-center'>
-                      <PieChart
-                        withTooltip
-                        // tooltipDataSource="segment"
-                        // labelsPosition="outside"
-                        labelsType="value"
-                        strokeWidth={1}
-                        size={175}
-                        w='100%'
-                        withLabels
-                        data={dataForPieChart}
-                        strokeColor='white'
-                        className='text-white'
-                      />
-                    </div>
-                  ) : (
-                    <div className='flex justify-center min-h-48'>
-                      <Text className='font-semibold text-lg text-center'>Нет данных</Text>
-                    </div >
-                  )}
-                </div>
-              </Accordion.Panel>
-            </Accordion.Item>
-          </Accordion> */}
-
         </div>
 
         <div>
@@ -254,8 +188,6 @@ function BalancePage() {
             <div className='flex justify-center'>
               <PieChart
                 withTooltip
-                // tooltipDataSource="segment"
-                // labelsPosition="outside"
                 labelsType="value"
                 strokeWidth={1}
                 size={175}
@@ -263,7 +195,7 @@ function BalancePage() {
                 withLabels
                 data={dataForPieChart}
                 strokeColor='white'
-                className='text-white'
+                className='text-white z-30'
               />
             </div>
           ) : (
